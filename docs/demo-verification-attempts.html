@@ -486,8 +486,9 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 1. accept · DocV · no failure reason (newest) -->
               <tr>
-                <td style="white-space:nowrap;color:#495057;">May 12, 2026, 02:14 PM</td>
+                <td style="white-space:nowrap;color:#495057;">May 13, 2026, 10:02 AM</td>
                 <td><span class="mono">7f3a9c21-socure-ref-0041</span></td>
                 <td><span class="badge badge-accept">accept</span></td>
                 <td>John Doe</td>
@@ -495,87 +496,84 @@
                 <td style="font-size:0.78rem;line-height:1.5;color:#495057;">123 Main St<br>Springfield, IL 62701</td>
                 <td>
                   <div class="modules">
-                    <span class="badge badge-accept">kyc</span>
                     <span class="badge badge-accept">DocV</span>
                   </div>
                 </td>
                 <td><span style="color:#868e96;font-size:0.75rem;">—</span></td>
               </tr>
+              <!-- 2. reject · DocV · DOB mismatch -->
               <tr>
-                <td style="white-space:nowrap;color:#495057;">May 10, 2026, 09:47 AM</td>
+                <td style="white-space:nowrap;color:#495057;">May 12, 2026, 03:47 PM</td>
                 <td><span class="mono">4b8e1d03-socure-ref-0038</span></td>
+                <td><span class="badge badge-reject">reject</span></td>
+                <td>John Doe</td>
+                <td style="white-space:nowrap;">04/15/1992</td>
+                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">123 Main St<br>Springfield, IL 62701</td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-reject">DocV</span>
+                  </div>
+                </td>
+                <td>
+                  <ul class="reasons">
+                    <li>I246 — Date of birth mismatch</li>
+                  </ul>
+                </td>
+              </tr>
+              <!-- 3. refer · KYC · address mismatch -->
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 11, 2026, 11:22 AM</td>
+                <td><span class="mono">2c5f7a88-socure-ref-0034</span></td>
                 <td><span class="badge badge-refer">refer</span></td>
                 <td>John Doe</td>
                 <td style="white-space:nowrap;">04/15/1992</td>
                 <td style="font-size:0.78rem;line-height:1.5;color:#495057;">456 Oak Ave<br>Chicago, IL 60601</td>
                 <td>
                   <div class="modules">
-                    <span class="badge badge-refer">kyc</span>
-                    <span class="badge badge-accept">DocV</span>
+                    <span class="badge badge-refer">KYC</span>
                   </div>
                 </td>
                 <td>
                   <ul class="reasons">
-                    <li>I914 — Address could not be verified</li>
+                    <li>I914 — Address mismatch</li>
                   </ul>
                 </td>
               </tr>
+              <!-- 4. resubmit · KYC · phone mismatch -->
               <tr>
-                <td style="white-space:nowrap;color:#495057;">May 8, 2026, 11:22 AM</td>
-                <td><span class="mono">2c5f7a88-socure-ref-0034</span></td>
-                <td><span class="badge badge-reject">reject</span></td>
-                <td>Johnathan Doe</td>
-                <td style="white-space:nowrap;">04/15/1992</td>
-                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">456 Oak Ave<br>Chicago, IL 60601</td>
-                <td>
-                  <div class="modules">
-                    <span class="badge badge-reject">kyc</span>
-                    <span class="badge badge-accept">DocV</span>
-                  </div>
-                </td>
-                <td>
-                  <ul class="reasons">
-                    <li>I604 — SSN not found in Socure's network</li>
-                    <li>R238 — High-risk fraud score</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td style="white-space:nowrap;color:#495057;">May 7, 2026, 04:05 PM</td>
+                <td style="white-space:nowrap;color:#495057;">May 10, 2026, 09:15 AM</td>
                 <td><span class="mono">9d1b3e56-socure-ref-0031</span></td>
                 <td><span class="badge badge-resubmit">resubmit</span></td>
                 <td>John Doe</td>
                 <td style="white-space:nowrap;">04/15/1992</td>
-                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">789 Pine Rd, Apt 2B<br>Evanston, IL 60201</td>
+                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">456 Oak Ave<br>Chicago, IL 60601</td>
                 <td>
                   <div class="modules">
-                    <span class="badge badge-accept">kyc</span>
-                    <span class="badge badge-resubmit">DocV</span>
+                    <span class="badge badge-resubmit">KYC</span>
                   </div>
                 </td>
                 <td>
                   <ul class="reasons">
-                    <li>I820 — Document image quality too low</li>
+                    <li>I332 — Phone number mismatch</li>
                   </ul>
                 </td>
               </tr>
+              <!-- 5. resubmit · KYC · name mismatch (different name, oldest) -->
               <tr>
-                <td style="white-space:nowrap;color:#495057;">May 3, 2026, 08:30 AM</td>
+                <td style="white-space:nowrap;color:#495057;">May 8, 2026, 04:30 PM</td>
                 <td><span class="mono">1a6c2f74-socure-ref-0027</span></td>
-                <td><span class="badge badge-reject">reject</span></td>
-                <td>J. Doe</td>
+                <td><span class="badge badge-resubmit">resubmit</span></td>
+                <td>Jonathan D. Smith</td>
                 <td style="white-space:nowrap;">04/15/1992</td>
-                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">789 Pine Rd<br>Evanston, IL 60201</td>
+                <td style="font-size:0.78rem;line-height:1.5;color:#495057;">456 Oak Ave<br>Chicago, IL 60601</td>
                 <td>
                   <div class="modules">
-                    <span class="badge badge-accept">kyc</span>
-                    <span class="badge badge-reject">DocV</span>
+                    <span class="badge badge-resubmit">KYC</span>
                   </div>
                 </td>
                 <td>
                   <ul class="reasons">
-                    <li>R101 — Velocity alert: multiple accounts same device</li>
-                    <li>I731 — Document type not accepted</li>
+                    <li>I128 — Name mismatch</li>
                   </ul>
                 </td>
               </tr>
