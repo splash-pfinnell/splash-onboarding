@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splash Admin — User Verification Attempts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f8f9fa;
+      color: #212529;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: #fff;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #35A59E;
+    }
+    .header-logo svg { width: 28px; height: 28px; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar-chip {
+      width: 32px; height: 32px;
+      background: #35A59E;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── Shell ── */
+    .shell {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #dee2e6;
+      flex-shrink: 0;
+      padding: 16px 0;
+      overflow-y: auto;
+    }
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 16px 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: 0.875rem;
+      color: #495057;
+      cursor: pointer;
+      border-radius: 0;
+      transition: background 0.1s;
+    }
+    .nav-item:hover { background: #f1f3f5; }
+    .nav-item.active {
+      background: #e6f7f6;
+      color: #35A59E;
+      font-weight: 600;
+    }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active svg { opacity: 1; }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #35A59E;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    /* ── User header ── */
+    .user-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .user-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .user-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #35A59E, #2a7e78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .user-name { font-size: 1.2rem; font-weight: 700; color: #212529; }
+    .user-email { font-size: 0.8rem; color: #868e96; margin-top: 2px; }
+    .user-header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .action-btn {
+      border: 1px solid #dee2e6;
+      background: #fff;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #495057;
+    }
+    .action-btn:hover { background: #f1f3f5; }
+
+    /* ── Cards row ── */
+    .cards-row {
+      display: flex;
+      gap: 16px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .balance-card { flex: 0 0 260px; }
+    .fraud-card { flex: 1; }
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .balance-amount { font-size: 1.6rem; font-weight: 700; color: #212529; }
+    .balance-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #868e96;
+      margin-top: 8px;
+    }
+    .badge-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ebfbee;
+      color: #40c057;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 2px 10px;
+    }
+
+    /* ── Tabs ── */
+    .tabs-bar {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .tabs-list {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #dee2e6;
+      overflow-x: auto;
+      padding: 0 8px;
+    }
+    .tab-trigger {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: #868e96;
+      border: none;
+      background: none;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.1s;
+    }
+    .tab-trigger:hover { color: #495057; }
+    .tab-trigger.active {
+      color: #35A59E;
+      border-bottom-color: #35A59E;
+      font-weight: 600;
+    }
+    .tab-trigger svg { width: 14px; height: 14px; }
+    .tab-content { padding: 20px; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+    thead th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 8px 12px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    tbody tr { border-bottom: 1px solid #f1f3f5; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8f9fa; }
+    tbody td { padding: 12px 12px; vertical-align: top; }
+
+    .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; color: #495057; }
+
+    /* Status badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      border-radius: 999px;
+      padding: 0 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-accept  { background: #ebfbee; color: #40c057; }
+    .badge-reject  { background: #fff5f5; color: #fa5252; }
+    .badge-refer   { background: #fff9db; color: #fab005; }
+    .badge-resubmit{ background: #e7f5ff; color: #228be6; }
+
+    /* Module badges */
+    .modules { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    /* Reasons */
+    .reasons { list-style: none; }
+    .reasons li { font-size: 0.75rem; color: #868e96; line-height: 1.6; }
+
+    /* New badge */
+    .tab-new {
+      background: #35A59E;
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 1px 5px;
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 0;
+      color: #868e96;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#35A59E"/>
+      <path d="M8 16 C8 10 24 10 24 16 C24 22 8 22 8 16Z" fill="white" opacity="0.9"/>
+    </svg>
+    Splash Admin
+  </div>
+  <div class="header-right">
+    <span style="font-size:0.8rem;color:#868e96;">pfinnell</span>
+    <div class="avatar-chip">PF</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="nav-section-label">Customer Support</div>
+    <div class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Users
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Transactions
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Contests
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Withdrawal Requests
+    </div>
+    <div class="nav-section-label">Trust &amp; Safety</div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      Fraud Flags
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Restrictions
+    </div>
+    <div class="nav-section-label">Finance</div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Bulk Transactions
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Automated Payouts
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <button class="back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      Users
+    </button>
+
+    <!-- User header -->
+    <div class="user-header">
+      <div class="user-header-left">
+        <div class="user-avatar">JD</div>
+        <div>
+          <div class="user-name">john_doe92</div>
+          <div class="user-email">john.doe@example.com · <span style="font-family:monospace;font-size:0.75rem;">a3f8c1d2-4e5b-4f6a-89ab-cdef01234567</span></div>
+        </div>
+      </div>
+      <div class="user-header-actions">
+        <button class="action-btn">Suspend User</button>
+        <button class="action-btn">Reset Password</button>
+        <button class="action-btn">Merge Account</button>
+      </div>
+    </div>
+
+    <!-- Balance + Fraud row -->
+    <div class="cards-row">
+      <div class="card balance-card">
+        <div class="card-label">Available Balance</div>
+        <div class="balance-amount">$124.50</div>
+        <div class="balance-row">
+          <span>Withdrawable</span><span style="color:#212529;font-weight:600;">$80.00</span>
+        </div>
+        <div class="balance-row">
+          <span>Bonus</span><span style="color:#212529;font-weight:600;">$44.50</span>
+        </div>
+      </div>
+      <div class="card fraud-card">
+        <div class="card-label">Fraud &amp; Restrictions</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="badge-ok">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            No fraud flag
+          </span>
+          <span class="badge-ok">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            No restrictions
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+      <div class="tabs-list">
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Details
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Fraud Flag / Restrictions
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Transactions
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Adjust Balance
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          Bonuses
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+          Promo Codes
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Contests
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Commissioner Contests
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Quick Picks
+        </button>
+        <button class="tab-trigger active">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Verification
+          <span class="tab-new">NEW</span>
+        </button>
+      </div>
+
+      <!-- Verification tab content -->
+      <div class="tab-content">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Reference ID</th>
+                <th>Status</th>
+                <th>Modules</th>
+                <th>Failure Reasons</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 12, 2026, 02:14 PM</td>
+                <td><span class="mono">7f3a9c21-socure-ref-0041</span></td>
+                <td><span class="badge badge-accept">accept</span></td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-accept">sigma</span>
+                    <span class="badge badge-accept">kyc</span>
+                    <span class="badge badge-accept">document</span>
+                  </div>
+                </td>
+                <td><span style="color:#868e96;font-size:0.75rem;">—</span></td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 10, 2026, 09:47 AM</td>
+                <td><span class="mono">4b8e1d03-socure-ref-0038</span></td>
+                <td><span class="badge badge-refer">refer</span></td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-accept">sigma</span>
+                    <span class="badge badge-refer">kyc</span>
+                    <span class="badge badge-accept">document</span>
+                  </div>
+                </td>
+                <td>
+                  <ul class="reasons">
+                    <li>I914 — Address could not be verified</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 8, 2026, 11:22 AM</td>
+                <td><span class="mono">2c5f7a88-socure-ref-0034</span></td>
+                <td><span class="badge badge-reject">reject</span></td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-reject">sigma</span>
+                    <span class="badge badge-reject">kyc</span>
+                    <span class="badge badge-accept">document</span>
+                  </div>
+                </td>
+                <td>
+                  <ul class="reasons">
+                    <li>I604 — SSN not found in Socure's network</li>
+                    <li>R238 — High-risk fraud score</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 7, 2026, 04:05 PM</td>
+                <td><span class="mono">9d1b3e56-socure-ref-0031</span></td>
+                <td><span class="badge badge-resubmit">resubmit</span></td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-accept">sigma</span>
+                    <span class="badge badge-accept">kyc</span>
+                    <span class="badge badge-resubmit">document</span>
+                  </div>
+                </td>
+                <td>
+                  <ul class="reasons">
+                    <li>I820 — Document image quality too low</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;color:#495057;">May 3, 2026, 08:30 AM</td>
+                <td><span class="mono">1a6c2f74-socure-ref-0027</span></td>
+                <td><span class="badge badge-reject">reject</span></td>
+                <td>
+                  <div class="modules">
+                    <span class="badge badge-reject">sigma</span>
+                    <span class="badge badge-accept">kyc</span>
+                    <span class="badge badge-reject">document</span>
+                  </div>
+                </td>
+                <td>
+                  <ul class="reasons">
+                    <li>R101 — Velocity alert: multiple accounts same device</li>
+                    <li>I731 — Document type not accepted</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
