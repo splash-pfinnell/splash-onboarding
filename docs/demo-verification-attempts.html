@@ -246,9 +246,13 @@
     .tab-content { padding: 20px; }
 
     /* ── Table ── */
-    .table-wrap { overflow-x: auto; }
+    .table-wrap { overflow-x: scroll; scrollbar-width: thin; scrollbar-color: #dee2e6 transparent; }
+    .table-wrap::-webkit-scrollbar { height: 6px; }
+    .table-wrap::-webkit-scrollbar-track { background: transparent; }
+    .table-wrap::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 3px; }
     table {
       width: 100%;
+      min-width: 960px;
       border-collapse: collapse;
       font-size: 0.83rem;
     }
@@ -259,15 +263,25 @@
       color: #868e96;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
     }
+    /* Column width hints */
+    th:nth-child(1) { width: 140px; } /* Date */
+    th:nth-child(2) { width: 190px; } /* Reference ID */
+    th:nth-child(3) { width: 90px;  } /* Status */
+    th:nth-child(4) { width: 130px; } /* Name */
+    th:nth-child(5) { width: 100px; } /* DOB */
+    th:nth-child(6) { width: 160px; } /* Address */
+    th:nth-child(7) { width: 80px;  } /* Modules */
+    th:nth-child(8) { width: auto;  } /* Failure Reasons */
     tbody tr { border-bottom: 1px solid #f1f3f5; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f8f9fa; }
-    tbody td { padding: 12px 12px; vertical-align: top; }
+    tbody td { padding: 10px 10px; vertical-align: top; }
 
-    .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; color: #495057; }
+    .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.73rem; color: #495057; }
 
     /* Status badges */
     .badge {
