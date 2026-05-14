@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splash Sports — Wire Deposits Mock</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* ── Phone frame ── */
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #f2f2f7;
+      border-radius: 48px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.08);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px 10px;
+      flex-shrink: 0;
+    }
+    .status-time { font-size: 0.9rem; font-weight: 700; color: #000; }
+    .status-icons { display: flex; align-items: center; gap: 6px; }
+
+    /* ── Nav bar ── */
+    .nav-bar {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 12px 20px 14px;
+      border-bottom: 1px solid #e5e5ea;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .nav-back {
+      width: 32px; height: 32px;
+      border: none; background: #f2f2f7;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-title { font-size: 1.05rem; font-weight: 700; color: #000; }
+
+    /* ── Screen ── */
+    .screen {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Deposit page ── */
+    .deposit-page {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 20px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .deposit-page.pushed { transform: translateX(-100%); }
+
+    /* Balance pill */
+    .balance-pill {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .balance-label { font-size: 0.78rem; color: #8e8e93; font-weight: 500; }
+    .balance-amount { font-size: 1.6rem; font-weight: 800; color: #000; letter-spacing: -0.5px; }
+    .balance-sub { font-size: 0.72rem; color: #8e8e93; margin-top: 2px; }
+    .balance-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #35A59E, #2a7e78);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Section header */
+    .section-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #8e8e93;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0 4px;
+    }
+
+    /* Method list */
+    .method-list {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .method-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: background 0.12s;
+      border-bottom: 1px solid #f2f2f7;
+      position: relative;
+    }
+    .method-item:last-child { border-bottom: none; }
+    .method-item:active { background: #f2f2f7; }
+    .method-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+    .method-icon.teal { background: #e6f7f6; }
+    .method-icon.blue { background: #e7f5ff; }
+    .method-icon.green { background: #ebfbee; }
+    .method-icon.gold  { background: #fff9db; }
+    .method-body { flex: 1; min-width: 0; }
+    .method-name { font-size: 0.95rem; font-weight: 600; color: #000; }
+    .method-desc { font-size: 0.75rem; color: #8e8e93; margin-top: 2px; }
+    .method-chevron { color: #c7c7cc; flex-shrink: 0; }
+    .method-badge {
+      position: absolute;
+      top: 12px; right: 44px;
+      background: #35A59E;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Wire divider */
+    .wire-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px;
+    }
+    .wire-divider-line { flex: 1; height: 1px; background: #e5e5ea; }
+    .wire-divider-label { font-size: 0.7rem; color: #8e8e93; font-weight: 500; white-space: nowrap; }
+
+    /* ── Wire instructions panel ── */
+    .wire-panel {
+      position: absolute;
+      inset: 0;
+      background: #f2f2f7;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+    }
+    .wire-panel.open { transform: translateX(0); }
+
+    .wire-panel-nav {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 12px 20px 14px;
+      border-bottom: 1px solid #e5e5ea;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+    .wire-panel-title { font-size: 1.05rem; font-weight: 700; color: #000; }
+
+    .wire-content {
+      flex: 1;
+      padding: 20px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Alert banner */
+    .alert-banner {
+      background: #fff9db;
+      border: 1px solid #ffe066;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-text { font-size: 0.78rem; color: #664d03; line-height: 1.5; }
+    .alert-text strong { font-weight: 700; }
+
+    /* Info card */
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .info-card-header {
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid #f2f2f7;
+    }
+    .info-card-header-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #8e8e93;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid #f2f2f7;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row-label {
+      font-size: 0.8rem;
+      color: #8e8e93;
+      flex-shrink: 0;
+      width: 130px;
+    }
+    .info-row-value {
+      font-size: 0.82rem;
+      color: #000;
+      font-weight: 500;
+      text-align: right;
+      line-height: 1.4;
+    }
+    .info-row-value.mono {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+    }
+    .info-row-value.highlight {
+      color: #35A59E;
+      font-weight: 700;
+    }
+
+    /* Notice rows */
+    .notice-list {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .notice-item {
+      display: flex;
+      gap: 10px;
+      padding: 11px 16px;
+      border-bottom: 1px solid #f2f2f7;
+      align-items: flex-start;
+    }
+    .notice-item:last-child { border-bottom: none; }
+    .notice-num {
+      width: 20px; height: 20px;
+      background: #35A59E;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .notice-text {
+      font-size: 0.8rem;
+      color: #3a3a3c;
+      line-height: 1.5;
+    }
+    .notice-text strong { font-weight: 700; color: #000; }
+
+    /* Footer note */
+    .wire-footer-note {
+      font-size: 0.73rem;
+      color: #8e8e93;
+      text-align: center;
+      line-height: 1.5;
+      padding: 0 4px;
+    }
+
+    /* Close button */
+    .close-btn {
+      margin: 4px 20px 0;
+      padding: 15px;
+      background: #35A59E;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.12s;
+    }
+    .close-btn:active { background: #2a7e78; }
+
+    /* ── Bottom tab bar ── */
+    .tab-bar {
+      background: #fff;
+      border-top: 1px solid #e5e5ea;
+      display: flex;
+      padding: 8px 0 20px;
+      flex-shrink: 0;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-label { font-size: 0.6rem; font-weight: 500; }
+    .tab-item.active svg { color: #35A59E; }
+    .tab-item.active .tab-label { color: #35A59E; }
+    .tab-item:not(.active) svg { color: #8e8e93; }
+    .tab-item:not(.active) .tab-label { color: #8e8e93; }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="3" width="3" height="9" rx="1"/><rect x="4.5" y="2" width="3" height="10" rx="1"/><rect x="9" y="0" width="3" height="12" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".3"/></svg>
+      <svg width="16" height="12" viewBox="0 0 24 12" fill="currentColor"><path d="M1 4C4.5 1 8 0 12 0s7.5 1 11 4l-2 2C18.5 3.5 15.5 2.5 12 2.5S5.5 3.5 3 6L1 4z"/><path d="M5 8c1.9-1.7 4.3-2.5 7-2.5s5.1.8 7 2.5l-2 2c-1.3-1.1-3-1.7-5-1.7s-3.7.6-5 1.7L5 8z"/><circle cx="12" cy="12" r="2"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M23 4.5v3a2 2 0 0 0 0-3z" fill="currentColor" opacity=".4"/></svg>
+    </div>
+  </div>
+
+  <!-- Nav bar -->
+  <div class="nav-bar">
+    <button class="nav-back">
+      <svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><path d="M8 1L2 8l6 7"/></svg>
+    </button>
+    <span class="nav-title">Deposit</span>
+  </div>
+
+  <!-- Screen area -->
+  <div class="screen">
+
+    <!-- Deposit page -->
+    <div class="deposit-page" id="depositPage">
+
+      <!-- Balance -->
+      <div class="balance-pill">
+        <div>
+          <div class="balance-label">Available Balance</div>
+          <div class="balance-amount">$124.50</div>
+          <div class="balance-sub">Withdrawable $80.00 · Bonus $44.50</div>
+        </div>
+        <div class="balance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+      </div>
+
+      <!-- Online banking -->
+      <div class="section-header">Online Banking</div>
+      <div class="method-list">
+        <div class="method-item">
+          <div class="method-icon teal">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35A59E" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          <div class="method-body">
+            <div class="method-name">Aeropay</div>
+            <div class="method-desc">Instant · No fees</div>
+          </div>
+          <div class="method-chevron">
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l6 6-6 6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="section-header">Debit Card</div>
+      <div class="method-list">
+        <div class="method-item">
+          <div class="method-icon blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#228be6" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+          </div>
+          <div class="method-body">
+            <div class="method-name">Debit Card</div>
+            <div class="method-desc">Visa · Mastercard</div>
+          </div>
+          <div class="method-chevron">
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l6 6-6 6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wire divider -->
+      <div class="wire-divider">
+        <div class="wire-divider-line"></div>
+        <div class="wire-divider-label">Large deposits ($10,000+)</div>
+        <div class="wire-divider-line"></div>
+      </div>
+
+      <!-- Wire transfer -->
+      <div class="method-list">
+        <div class="method-item" id="wireBtn" onclick="openWire()">
+          <div class="method-icon gold">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59f00" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="method-body">
+            <div class="method-name">Wire Transfer</div>
+            <div class="method-desc">US banks only · $10,000 minimum</div>
+          </div>
+          <span class="method-badge">VIP</span>
+          <div class="method-chevron">
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l6 6-6 6"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /deposit-page -->
+
+    <!-- Wire instructions panel -->
+    <div class="wire-panel" id="wirePanel">
+
+      <div class="wire-panel-nav">
+        <button class="nav-back" onclick="closeWire()">
+          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><path d="M8 1L2 8l6 7"/></svg>
+        </button>
+        <span class="wire-panel-title">Wire Transfer Instructions</span>
+      </div>
+
+      <div class="wire-content">
+
+        <!-- Alert: minimum -->
+        <div class="alert-banner">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-text">
+            <strong>$10,000.00 minimum.</strong> Wires under this amount will be returned. Use Aeropay (Online Banking) for smaller deposits.
+          </div>
+        </div>
+
+        <!-- Important notices -->
+        <div class="section-header" style="padding:0 4px;">Important Information</div>
+        <div class="notice-list">
+          <div class="notice-item">
+            <div class="notice-num">1</div>
+            <div class="notice-text">The name on your bank account must match the name on your Splash Sports account: <strong>John Doe</strong></div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-num">2</div>
+            <div class="notice-text">All wires must be received <strong>Monday – Friday by 4:00 PM EST</strong> to be posted the same day.</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-num">3</div>
+            <div class="notice-text">You must be in a <strong>valid location</strong> for the credit to be posted to your account.</div>
+          </div>
+        </div>
+
+        <!-- Bank details -->
+        <div class="section-header" style="padding:0 4px;">Splash Sports Bank Information</div>
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-row-label">Receiving Bank Name</span>
+            <span class="info-row-value">First National Bank</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Receiving Bank Address</span>
+            <span class="info-row-value">100 Federal Plaza<br>New York, NY 10278</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">ABA / Routing Number</span>
+            <span class="info-row-value mono highlight">021000021</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Account Number</span>
+            <span class="info-row-value mono highlight">4892751036</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Beneficiary Account Title</span>
+            <span class="info-row-value">Splash Sports LLC</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Beneficiary Address</span>
+            <span class="info-row-value">123 Sports Way, Ste 400<br>New York, NY 10001</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Reference</span>
+            <span class="info-row-value highlight">john.doe@splashsports.com</span>
+          </div>
+        </div>
+
+        <div class="wire-footer-note">
+          To ensure proper posting, please adhere to the exact wire transfer instructions provided above.
+        </div>
+
+      </div><!-- /wire-content -->
+
+      <button class="close-btn" onclick="closeWire()">Done</button>
+
+    </div><!-- /wire-panel -->
+
+  </div><!-- /screen -->
+
+  <!-- Bottom tab bar -->
+  <div class="tab-bar">
+    <div class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="tab-label">Home</span>
+    </div>
+    <div class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="tab-label">Contests</span>
+    </div>
+    <div class="tab-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span class="tab-label">Wallet</span>
+    </div>
+    <div class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="tab-label">Profile</span>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+  function openWire() {
+    document.getElementById('depositPage').classList.add('pushed');
+    document.getElementById('wirePanel').classList.add('open');
+  }
+  function closeWire() {
+    document.getElementById('depositPage').classList.remove('pushed');
+    document.getElementById('wirePanel').classList.remove('open');
+  }
+</script>
+
+</body>
+</html>
