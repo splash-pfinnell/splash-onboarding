@@ -26,10 +26,10 @@ tags:
 > **Status:** `1pager-draft` · **Domain:** admin · **Product line:** internal-tool · **Author:** pfinnell
 
 ## Why now
-When a user enrolls in self-exclusion today, the `self-exclusion` fraud flag — which enforces Deny Contest and Deny Deposit — is not applied automatically. An admin must notice the enrollment (via a Metabase query) and apply the flag manually. This gap leaves self-excluded users unrestricted until someone catches it, which is both a compliance risk and an operational burden.
+When a user enrolls in self-exclusion today, the `self-exclusion` fraud flag — which enforces Deny Contest and Deny Deposit — is not applied automatically. An admin must notice the enrollment (via a Metabase query) and apply the flag manually. This gap leaves CS unaware when a user enrolls in an exclusion and when the exclusion ends.
 
 ## Problem
-Self-exclusion enrollment and fraud flag enforcement are disconnected. A user can enroll in self-exclusion and still deposit or enter contests until an admin manually applies the flag. Similarly, when a self-exclusion expires, the flag must be manually removed — even though the expiry is time-determined and known to the system. Neither action requires human judgment, yet both require human intervention today.
+Self-exclusion enrollment and fraud flag enforcement are disconnected. A user can enroll in self-exclusion and CS has no insight to the enrollment. Similarly, when a self-exclusion expires, the flag must be manually removed — even though the expiry is time-determined and known to the system. Neither action requires human judgment, yet both require human intervention today.
 
 ## Who
 Trust & Safety and Internal Ops teams who currently monitor a Metabase query (`user-timeouts-self-exclusion`) to identify self-excluded users who need the fraud flag applied.
