@@ -40,7 +40,7 @@ Trust & Safety team currently use two Metabase queries — `user-timeouts-self-e
 
 ### 1 — Backend: automate fraud flag lifecycle (identity service)
 
-**On enrollment:** After the self-exclusion record is persisted, apply the `self-exclusion` fraud flag if not already present. Use `performedBy: 'system'` and note `"Auto-applied: user enrolled in self-exclusion"` so the action is visible in the admin audit history.
+**On enrollment:** After the self-exclusion record is persisted, apply the `self-exclusion` fraud flag if not already present. Use `performedBy: 'system'` and a note that includes the exclusion end date and any active limit end dates (e.g. `"Auto-applied: user enrolled in self-exclusion. Exclusion ends: 2026-08-01. Limits expire: 2026-06-15."`) so the full enrollment context is visible in the admin audit history.
 
 **On expiry:** When a self-exclusion expires (event-driven preferred; scheduled job as fallback), remove the `self-exclusion` fraud flag if currently applied. Use `performedBy: 'system'` and note `"Auto-removed: self-exclusion period expired"`.
 
