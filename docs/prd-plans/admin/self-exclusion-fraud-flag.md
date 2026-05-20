@@ -26,7 +26,7 @@ tags:
 > **Status:** `1pager-draft` · **Domain:** admin · **Product line:** internal-tool · **Author:** pfinnell
 
 ## Why now
-When a user enrolls in self-exclusion today, the `self-exclusion` fraud flag — which enforces Deny Contest and Deny Deposit — is not applied automatically. An admin must notice the enrollment (via a Metabase query) and apply the flag manually. This gap leaves CS unaware when a user enrolls in an exclusion and when the exclusion ends. Separately, user-set limits (deposit caps, daily spend limits) are only visible via Metabase — there is no way for CS to see them without leaving the admin tool.
+When a user enrolls in self-exclusion today, the `self-exclusion` fraud flag is not applied automatically. T&S admin must notice the enrollment (via a Metabase query) and apply the flag manually. This gap leaves CS / Marketing unaware when a user enrolls in an exclusion and when the exclusion ends. Separately, self-imposed user limits (deposit limits, contest entry limits, and entry fee limits) are only visible via Metabase — there is no way for CS to see them.
 
 ## Problem
 Self-exclusion enrollment and fraud flag enforcement are disconnected. A user can enroll in self-exclusion and CS has no insight to the enrollment. Similarly, when a self-exclusion expires, the flag must be manually removed — even though the expiry is time-determined and known to the system. Neither action requires human judgment, yet both require human intervention today.
@@ -34,7 +34,7 @@ Self-exclusion enrollment and fraud flag enforcement are disconnected. A user ca
 User-set responsible gaming limits have the same blind spot: CS cannot see what limits a user has configured without running a Metabase query, making it impossible to quickly answer support inquiries or investigate disputes involving limits.
 
 ## Who
-Customer Support and Trust & Safety teams who currently use two Metabase queries — `user-timeouts-self-exclusion` and `user-limits` — to look up per-user exclusion and limit data during investigations.
+Trust & Safety team currently use two Metabase queries — `user-timeouts-self-exclusion` and `user-limits` — to look up per-user exclusion and limit enrollment. T&S can only apply a self-exclusion flag to the account for CS to see, but there's no insight into user limits.
 
 ## Solution sketch
 
