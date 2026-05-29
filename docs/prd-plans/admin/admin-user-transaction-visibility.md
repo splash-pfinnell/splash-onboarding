@@ -93,7 +93,6 @@ _To be defined. Consider: access control (which Admin roles can view transaction
 
 - Given a user has transactions, when an admin operator opens that user's detail page, then a Transaction History section is visible showing all transactions.
 - Given a transaction row is displayed, when the operator views it, then type label, amount, status badge, and timestamp are all visible without expanding the row.
-- Given a transaction type is an internal code or enum, when it is displayed, then a human-readable label is shown instead (e.g. "Deposit" not "DEPOSIT_TXN").
 - Given a transaction has a status, when it is displayed, then the status badge reflects one of: Completed, Pending, Failed, Reversed — with distinct visual styling per state.
 - Given two transactions of different types are displayed, when the operator views them, then each row uses its designated color (Deposit=Green, Entry=Blue, Slip Entry=Light Blue, Payout=Gold, Slip Payout=Yellow, Contest/Entry Canceled=Orange, Withdrawal=Red, Bonus=Teal).
 - Given the same transaction type appears in multiple rows, when displayed, then all rows of that type share the same color.
