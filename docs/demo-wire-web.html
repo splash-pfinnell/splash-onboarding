@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splash — Wire Transfer Deposit</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1117;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════
+       TOP NAV — matches real Splash
+    ══════════════════════════════ */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: #0d1117;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 0;
+      z-index: 10;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 32px;
+      flex-shrink: 0;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-logo-text {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0;
+      flex: 1;
+    }
+    .nav-link {
+      padding: 6px 14px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      transition: color 0.12s;
+    }
+    .nav-link:hover { color: rgba(255,255,255,0.85); }
+    .nav-link.active {
+      color: #35A59E;
+      border-bottom-color: #35A59E;
+      font-weight: 600;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+    .nav-search {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-create-btn {
+      background: #35A59E;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .nav-wallet {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-balance-chip {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#35A59E,#2a7e78);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ══════════════════════════════
+       PAGE BACKGROUND — contest cards
+    ══════════════════════════════ */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      top: 52px;
+      background: #12181f;
+      overflow: hidden;
+    }
+
+    /* Simulated contest card rows */
+    .bg-row {
+      padding: 24px 32px 0;
+    }
+    .bg-row-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 14px;
+    }
+    .bg-cards {
+      display: flex;
+      gap: 16px;
+    }
+    .bg-card {
+      flex: 1;
+      height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .bg-card-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px;
+    }
+    .bg-card.blue { background: linear-gradient(160deg,#1a3a6e,#0d2040); }
+    .bg-card.red  { background: linear-gradient(160deg,#6e1a1a,#40100d); }
+    .bg-card.green{ background: linear-gradient(160deg,#1a5a3a,#0d402a); }
+    .bg-card.purple{background: linear-gradient(160deg,#3a1a6e,#1d0d40); }
+    .bg-card-prize {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .bg-card-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2px;
+    }
+    .bg-card-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.4);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.6rem;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 2px 6px;
+      text-transform: uppercase;
+    }
+
+    /* Blur overlay */
+    .blur-overlay {
+      position: fixed;
+      inset: 0;
+      top: 52px;
+      background: rgba(10,14,20,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 5;
+    }
+
+    /* ══════════════════════════════
+       DEPOSIT MODAL
+    ══════════════════════════════ */
+    .modal-wrap {
+      position: fixed;
+      inset: 0;
+      top: 52px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: calc(100vh - 92px);
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.45);
+    }
+
+    .modal-header {
+      padding: 28px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #111;
+      letter-spacing: 0.02em;
+    }
+    .modal-subtitle {
+      font-size: 0.78rem;
+      color: #777;
+      margin-top: 6px;
+      line-height: 1.55;
+      max-width: 340px;
+    }
+    .modal-x {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid #ddd;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #888;
+      flex-shrink: 0;
+      transition: background 0.12s;
+    }
+    .modal-x:hover { background: #f5f5f5; }
+
+    .modal-body {
+      padding: 22px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Section label */
+    .s-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    /* Saved method */
+    .saved-row {
+      border: 1.5px solid #e2e2e2;
+      border-radius: 10px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .saved-row:hover { border-color: #bbb; }
+    .saved-icon { color: #555; flex-shrink: 0; }
+    .saved-body { flex: 1; }
+    .saved-name { font-size: 0.85rem; font-weight: 700; color: #111; }
+    .saved-sub { font-size: 0.73rem; color: #888; margin-top: 1px; }
+    .saved-trash { color: #ccc; cursor: pointer; }
+    .saved-trash:hover { color: #e03131; }
+
+    /* Aeropay card */
+    .aeropay-card {
+      border: 1.5px solid #e2e2e2;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.12s;
+    }
+    .aeropay-card:hover { border-color: #bbb; }
+    .bank-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .bank-logo {
+      width: 28px; height: 19px;
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.45rem; font-weight: 900; color: #fff;
+      letter-spacing: -0.2px;
+    }
+    .aeropay-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #111;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .aeropay-logo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #e7f8ff;
+      color: #0ea5e9;
+      font-size: 0.7rem;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+    .aeropay-sub {
+      font-size: 0.73rem;
+      color: #888;
+      margin-top: 5px;
+      line-height: 1.45;
+    }
+
+    /* Other methods grid */
+    .methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .method-card {
+      border: 1.5px solid #e2e2e2;
+      border-radius: 10px;
+      padding: 20px 16px 16px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      transition: border-color 0.12s;
+      min-height: 100px;
+    }
+    .method-card:hover { border-color: #bbb; }
+    .method-card-logos { display: flex; align-items: center; gap: 5px; }
+    .method-card-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #111;
+    }
+
+    /* Wire card */
+    .method-card.wire {
+      border-color: #e0c84a;
+      background: #fffef5;
+    }
+    .method-card.wire:hover { border-color: #c9a800; }
+    .wire-min-tag {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #8a6d00;
+      background: #fff3cc;
+      border: 1px solid #e0c84a;
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+
+    /* ══════════════════════════════
+       WIRE INSTRUCTIONS MODAL
+    ══════════════════════════════ */
+    .wire-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .wire-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .wire-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+    .wire-overlay.open .wire-modal { transform: translateY(0) scale(1); }
+
+    .wm-header {
+      padding: 26px 26px 0;
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .wm-title {
+      font-size: 1.05rem; font-weight: 900; color: #111;
+      text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .wm-sub {
+      font-size: 0.76rem; color: #777; margin-top: 5px; line-height: 1.5;
+    }
+
+    .wm-body {
+      padding: 20px 26px 28px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* Warning */
+    .wm-alert {
+      background: #fffbe6;
+      border: 1px solid #ffe066;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex; gap: 9px; align-items: flex-start;
+    }
+    .wm-alert-text { font-size: 0.78rem; color: #5c4a00; line-height: 1.5; }
+    .wm-alert-text strong { font-weight: 700; }
+
+    /* Info section */
+    .wm-section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    /* Numbered notices */
+    .wm-notices { display: flex; flex-direction: column; gap: 7px; }
+    .wm-notice { display: flex; gap: 10px; align-items: flex-start; }
+    .wm-num {
+      width: 20px; height: 20px;
+      background: #111; color: #fff;
+      font-size: 0.63rem; font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .wm-notice-text { font-size: 0.8rem; color: #444; line-height: 1.5; }
+    .wm-notice-text strong { font-weight: 700; color: #111; }
+
+    /* Bank details table */
+    .wm-table {
+      border: 1.5px solid #ebebeb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .wm-row {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 12px;
+      padding: 9px 14px;
+      border-bottom: 1px solid #f3f3f3;
+    }
+    .wm-row:last-child { border-bottom: none; }
+    .wm-row-label { font-size: 0.75rem; color: #999; flex-shrink: 0; width: 150px; }
+    .wm-row-value { font-size: 0.8rem; color: #111; font-weight: 600; text-align: right; line-height: 1.4; }
+    .wm-row-value.mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.75rem; }
+    .wm-row-value.teal { color: #0ea5bd; }
+
+    .wm-footer-note {
+      font-size: 0.72rem; color: #aaa;
+      text-align: center; line-height: 1.55;
+    }
+
+    .wm-done {
+      width: 100%;
+      padding: 13px;
+      background: #111; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; transition: background 0.12s;
+    }
+    .wm-done:hover { background: #2a2a2a; }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <div class="nav-logo">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#35A59E"/><path d="M7 16 C7 10 25 10 25 16 C25 22 7 22 7 16Z" fill="white" opacity="0.92"/></svg>
+      <span class="nav-logo-text">splash</span>
+    </div>
+    <div class="nav-links">
+      <div class="nav-link active">Home</div>
+      <div class="nav-link">Lobby</div>
+      <div class="nav-link">QuickPicks</div>
+      <div class="nav-link">My Contests</div>
+      <div class="nav-link">Commissioner</div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-create-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create contest
+      </button>
+      <button class="nav-wallet">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </button>
+      <div class="nav-balance-chip">
+        <div class="nav-avatar">JD</div>
+        $81.55
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Background contest cards -->
+  <div class="page-bg">
+    <div class="bg-row">
+      <div class="bg-row-title">World Cup Survivor II</div>
+      <div class="bg-cards">
+        <div class="bg-card blue">
+          <div class="bg-card-tag">Group Stage · Knockout</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">$100K</div>
+            <div class="bg-card-label">World Cup Survivor</div>
+          </div>
+        </div>
+        <div class="bg-card red">
+          <div class="bg-card-tag">Group Stage · Knockout</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">$50K</div>
+            <div class="bg-card-label">World Cup Survivor</div>
+          </div>
+        </div>
+        <div class="bg-card green">
+          <div class="bg-card-tag">Group Stage · Knockout</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">$25K</div>
+            <div class="bg-card-label">World Cup Survivor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-row" style="margin-top:28px;">
+      <div class="bg-row-title">World Cup Commissioners</div>
+      <div class="bg-cards">
+        <div class="bg-card purple">
+          <div class="bg-card-tag">Commissioner</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">Epic Ski</div>
+            <div class="bg-card-label">On Splash Sports</div>
+          </div>
+        </div>
+        <div class="bg-card blue" style="background:linear-gradient(160deg,#1a2e5c,#0a1830);">
+          <div class="bg-card-tag">Commissioner</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">Express</div>
+            <div class="bg-card-label">World Cup</div>
+          </div>
+        </div>
+        <div class="bg-card red" style="background:linear-gradient(160deg,#5c1a1a,#300a0a);">
+          <div class="bg-card-tag">Commissioner</div>
+          <div class="bg-card-inner">
+            <div class="bg-card-prize">Survivor</div>
+            <div class="bg-card-label">Contest</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blur overlay -->
+  <div class="blur-overlay"></div>
+
+  <!-- Deposit modal -->
+  <div class="modal-wrap">
+    <div class="modal">
+
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">DEPOSIT METHOD</div>
+          <div class="modal-subtitle">Select your deposit method. You will only be able to withdraw funds using methods that you've used to deposit funds.</div>
+        </div>
+        <button class="modal-x">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Saved methods -->
+        <div>
+          <div class="s-label">Saved deposit methods</div>
+          <div class="saved-row">
+            <div class="saved-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="saved-body">
+              <div class="saved-name">CHECKING</div>
+              <div class="saved-sub">Citizens Bank</div>
+            </div>
+            <div class="saved-trash">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connect bank -->
+        <div>
+          <div class="s-label">Connect another bank account</div>
+          <div class="aeropay-card">
+            <div class="bank-logos">
+              <div class="bank-logo" style="background:#b22222;">BofA</div>
+              <div class="bank-logo" style="background:#003087;">Chase</div>
+              <div class="bank-logo" style="background:#005288;">WF</div>
+              <div class="bank-logo" style="background:#004b87;">Citi</div>
+              <div class="bank-logo" style="background:#e8e8e8;color:#888;">···</div>
+            </div>
+            <div class="aeropay-title">
+              Online Banking via
+              <span class="aeropay-logo-pill">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                aeropay
+              </span>
+            </div>
+            <div class="aeropay-sub">Deposit with online banking to unlock free and instant withdrawals, no account or routing numbers needed.</div>
+          </div>
+        </div>
+
+        <!-- Other methods -->
+        <div>
+          <div class="s-label">Other deposit methods</div>
+          <div class="methods-grid">
+
+            <!-- Debit Card -->
+            <div class="method-card">
+              <div class="method-card-logos">
+                <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="4" fill="#1a1f71"/><text x="5" y="15" font-family="Arial" font-size="8" font-weight="900" fill="#fff">VISA</text></svg>
+                <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="4" fill="#fff" stroke="#eee"/><circle cx="13" cy="11" r="6.5" fill="#eb001b"/><circle cx="21" cy="11" r="6.5" fill="#f79e1b"/><path d="M17 6a6.5 6.5 0 010 10 6.5 6.5 0 010-10z" fill="#ff5f00"/></svg>
+                <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="4" fill="#fff" stroke="#eee"/><text x="3" y="15" font-family="Arial" font-size="6.5" font-weight="700" fill="#f60">DISCOVER</text></svg>
+              </div>
+              <div class="method-card-name">Debit Card</div>
+            </div>
+
+            <!-- PayPal -->
+            <div class="method-card">
+              <div class="method-card-logos">
+                <svg width="70" height="22" viewBox="0 0 70 22">
+                  <text x="0" y="17" font-family="Arial" font-size="16" font-weight="900" fill="#003087">Pay</text>
+                  <text x="29" y="17" font-family="Arial" font-size="16" font-weight="900" fill="#009cde">Pal</text>
+                </svg>
+              </div>
+              <div class="method-card-name">PayPal</div>
+            </div>
+
+            <!-- Venmo -->
+            <div class="method-card">
+              <div class="method-card-logos">
+                <svg width="28" height="28" viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#3d95ce"/><text x="5" y="19" font-family="Arial" font-size="8" font-weight="900" fill="#fff">V</text></svg>
+              </div>
+              <div class="method-card-name">Venmo</div>
+            </div>
+
+            <!-- Wire Transfer — NEW -->
+            <div class="method-card wire" onclick="openWire()">
+              <div class="method-card-logos">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c9a000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="method-card-name">Wire Transfer</div>
+              <div class="wire-min-tag">$10,000 minimum</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Wire instructions modal -->
+  <div class="wire-overlay" id="wireOverlay" onclick="handleOverlay(event)">
+    <div class="wire-modal">
+
+      <div class="wm-header">
+        <div>
+          <div class="wm-title">Wire Transfer</div>
+          <div class="wm-sub">Provide the following information to your bank to initiate a wire transfer to Splash Sports. US banks only.</div>
+        </div>
+        <button class="modal-x" onclick="closeWire()" style="margin-left:12px;flex-shrink:0;">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l9 9M10 1L1 10"/></svg>
+        </button>
+      </div>
+
+      <div class="wm-body">
+
+        <div class="wm-alert">
+          <span style="font-size:0.95rem;flex-shrink:0;margin-top:1px;">⚠️</span>
+          <div class="wm-alert-text"><strong>$10,000.00 minimum.</strong> Any transfer of less than $10,000.00 will be returned. Please use Online Banking (Aeropay) for smaller deposits.</div>
+        </div>
+
+        <div>
+          <div class="wm-section-label">Important Information</div>
+          <div class="wm-notices">
+            <div class="wm-notice">
+              <div class="wm-num">1</div>
+              <div class="wm-notice-text">Wire Transfer Minimum — <strong>$10,000.00</strong></div>
+            </div>
+            <div class="wm-notice">
+              <div class="wm-num">2</div>
+              <div class="wm-notice-text">The name on your bank account must match the name on your Splash Sports account: <strong>John Doe</strong></div>
+            </div>
+            <div class="wm-notice">
+              <div class="wm-num">3</div>
+              <div class="wm-notice-text">All wires must be received <strong>Monday – Friday by 4:00 PM EST</strong> to be posted the same day.</div>
+            </div>
+            <div class="wm-notice">
+              <div class="wm-num">4</div>
+              <div class="wm-notice-text">You must be in a <strong>valid location</strong> for the credit to be posted to your account.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="wm-section-label">Splash Sports Bank Information</div>
+          <div class="wm-table">
+            <div class="wm-row"><span class="wm-row-label">Receiving Bank Name</span><span class="wm-row-value">First National Bank</span></div>
+            <div class="wm-row"><span class="wm-row-label">Receiving Bank Address</span><span class="wm-row-value">100 Federal Plaza, New York, NY 10278</span></div>
+            <div class="wm-row"><span class="wm-row-label">ABA / Routing Number</span><span class="wm-row-value mono teal">021000021</span></div>
+            <div class="wm-row"><span class="wm-row-label">Account Number</span><span class="wm-row-value mono teal">4892751036</span></div>
+            <div class="wm-row"><span class="wm-row-label">Beneficiary Account Title</span><span class="wm-row-value">Splash Sports LLC</span></div>
+            <div class="wm-row"><span class="wm-row-label">Beneficiary Address</span><span class="wm-row-value">123 Sports Way, Ste 400, New York, NY 10001</span></div>
+            <div class="wm-row"><span class="wm-row-label">Reference</span><span class="wm-row-value teal">john.doe@splashsports.com</span></div>
+          </div>
+        </div>
+
+        <div class="wm-footer-note">To ensure proper posting, please adhere to the exact wire transfer instructions provided above.</div>
+
+        <button class="wm-done" onclick="closeWire()">Done</button>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openWire() {
+      document.getElementById('wireOverlay').classList.add('open');
+    }
+    function closeWire() {
+      document.getElementById('wireOverlay').classList.remove('open');
+    }
+    function handleOverlay(e) {
+      if (e.target === document.getElementById('wireOverlay')) closeWire();
+    }
+  </script>
+
+</body>
+</html>
