@@ -133,204 +133,268 @@
       position: fixed;
       inset: 0;
       top: 52px;
-      background: #f4f4f4;
+      background: #f0f0f0;
       overflow: hidden;
     }
 
     /* QuickPicks strip */
     .qp-strip {
-      background: #1a1040;
-      padding: 8px 16px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: stretch;
+      height: 80px;
       overflow: hidden;
     }
-    .qp-badge {
-      background: #a855f7;
+    .qp-label {
+      background: #111;
       color: #fff;
-      font-size: 0.6rem;
-      font-weight: 800;
-      border-radius: 6px;
-      padding: 4px 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      width: 110px;
       flex-shrink: 0;
-      line-height: 1.2;
-    }
-    .qp-cards {
       display: flex;
-      gap: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 12px;
+      gap: 2px;
+      position: relative;
+    }
+    .qp-label-trending {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: #a855f7;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .qp-label-trending::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #a855f7;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .qp-label-name {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+    .qp-arrow {
+      position: absolute;
+      right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 20px; height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #111;
+    }
+    .qp-players {
+      display: flex;
       flex: 1;
       overflow: hidden;
     }
-    .qp-card {
-      background: rgba(255,255,255,0.07);
-      border-radius: 8px;
-      padding: 6px 10px;
+    .qp-player {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      padding: 0 20px;
+      border-right: 1px solid #f0f0f0;
+      min-width: 200px;
       flex-shrink: 0;
-      min-width: 160px;
     }
-    .qp-avatar {
-      width: 28px; height: 28px;
+    .qp-headshot {
+      width: 44px; height: 44px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.15);
+      background: #e5e7eb;
       flex-shrink: 0;
-      overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.55rem; color: rgba(255,255,255,0.5); font-weight: 700;
+      font-size: 0.65rem; font-weight: 700; color: #6b7280;
+      overflow: hidden;
     }
-    .qp-info { flex: 1; min-width: 0; }
-    .qp-name { font-size: 0.72rem; font-weight: 700; color: #fff; white-space: nowrap; }
-    .qp-stat { font-size: 0.62rem; color: rgba(255,255,255,0.4); margin-top: 1px; }
-    .qp-btns { display: flex; gap: 4px; }
-    .qp-btn {
-      font-size: 0.58rem; font-weight: 700;
-      border-radius: 4px; padding: 3px 7px;
-      border: none; cursor: pointer;
+    .qp-details { flex: 1; min-width: 0; }
+    .qp-player-name { font-size: 0.82rem; font-weight: 700; color: #111; }
+    .qp-contest { font-size: 0.65rem; color: #6b7280; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qp-stat-line { font-size: 0.78rem; font-weight: 800; color: #111; margin-top: 3px; }
+    .qp-stat-label { font-size: 0.58rem; color: #9ca3af; font-weight: 500; }
+    .qp-more-less {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex-shrink: 0;
     }
-    .qp-btn.more { background: rgba(16,185,129,0.2); color: #10b981; }
-    .qp-btn.less { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .qp-ml-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #374151;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 2px 0;
+    }
+    .qp-ml-btn svg { width: 10px; height: 10px; }
+    .qp-ml-btn.up { color: #10b981; }
+    .qp-ml-btn.dn { color: #ef4444; }
 
     /* Alert bar */
     .alert-bar {
       background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 9px 24px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin: 12px 24px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 500;
       color: #374151;
     }
-    .alert-dot {
-      width: 18px; height: 18px;
-      background: #ef4444;
+    .alert-circle {
+      width: 22px; height: 22px;
       border-radius: 50%;
+      background: #ef4444;
       color: #fff;
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
+    .alert-bar-right {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-    /* Hero carousel */
-    .hero-carousel {
+    /* Hero banner */
+    .hero {
+      margin: 0 24px;
       height: 260px;
-      background: linear-gradient(135deg, #1e0a4a 0%, #2d1060 40%, #1a0a3a 100%);
+      border-radius: 14px;
+      background: linear-gradient(100deg, #0d0a3e 0%, #2a0a7a 35%, #3a0d9e 55%, #1a0a5e 100%);
       position: relative;
       overflow: hidden;
     }
-    .hero-player {
-      position: absolute;
-      right: 80px;
-      bottom: 0;
-      width: 220px;
-      height: 260px;
-      opacity: 0.55;
-      background: linear-gradient(to top, rgba(30,10,74,0.3), transparent);
-    }
-    /* Stylized player silhouette */
-    .hero-player-shape {
-      position: absolute;
-      right: 60px; bottom: 0;
-      width: 200px; height: 260px;
-      background: rgba(160,130,255,0.18);
-      clip-path: polygon(40% 0%, 60% 5%, 70% 20%, 65% 40%, 80% 55%, 85% 80%, 75% 100%, 55% 100%, 60% 75%, 55% 55%, 45% 60%, 40% 100%, 25% 100%, 20% 75%, 30% 50%, 20% 30%, 25% 15%);
-    }
-    .hero-player-shape2 {
-      position: absolute;
-      right: 120px; bottom: 0;
-      width: 180px; height: 240px;
-      background: rgba(180,150,255,0.12);
-      clip-path: polygon(45% 0%, 58% 8%, 65% 22%, 62% 42%, 75% 58%, 78% 82%, 68% 100%, 50% 100%, 55% 76%, 50% 55%, 42% 62%, 38% 100%, 22% 100%, 18% 78%, 28% 52%, 22% 32%, 28% 16%);
-    }
+    /* Left lime circle */
     .hero-lime {
       position: absolute;
-      left: 60px; bottom: -20px;
-      width: 140px; height: 140px;
+      left: -10px; bottom: -30px;
+      width: 180px; height: 180px;
       background: #c8f000;
       border-radius: 50%;
-      opacity: 0.7;
     }
-    .hero-content {
+    /* Purple oval behind center */
+    .hero-oval {
       position: absolute;
-      top: 24px; left: 32px;
-    }
-    .hero-tag {
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.7);
-      font-size: 0.62rem; font-weight: 700;
-      border-radius: 999px; padding: 3px 10px;
-      display: inline-block; margin-bottom: 10px;
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .hero-title {
-      font-size: 2rem; font-weight: 900;
-      color: #fff; line-height: 1.1;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .hero-sub {
-      font-size: 0.78rem; color: rgba(255,255,255,0.5);
-      margin-top: 6px;
-    }
-    .hero-arrows {
-      position: absolute;
-      top: 50%; right: 16px;
-      transform: translateY(-50%);
-      display: flex; gap: 6px;
-    }
-    .hero-arrow {
-      width: 28px; height: 28px;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      width: 320px; height: 220px;
+      background: radial-gradient(ellipse, rgba(120,60,220,0.6) 0%, transparent 70%);
       border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.6);
-      display: flex; align-items: center; justify-content: center;
     }
+    /* Left player silhouette */
+    .hero-player-l {
+      position: absolute;
+      left: 30px; bottom: 0;
+      width: 200px; height: 240px;
+      background: rgba(180,160,255,0.25);
+      clip-path: polygon(42% 0%, 58% 4%, 68% 18%, 64% 38%, 78% 52%, 82% 76%, 72% 100%, 54% 100%, 58% 72%, 52% 52%, 44% 58%, 40% 100%, 24% 100%, 20% 72%, 30% 48%, 22% 28%, 28% 14%);
+    }
+    /* Right player silhouette */
+    .hero-player-r {
+      position: absolute;
+      right: 40px; bottom: 0;
+      width: 180px; height: 230px;
+      background: rgba(160,140,240,0.22);
+      clip-path: polygon(50% 0%, 65% 8%, 72% 24%, 68% 44%, 80% 58%, 82% 80%, 70% 100%, 52% 100%, 56% 76%, 50% 56%, 38% 62%, 32% 100%, 18% 100%, 16% 76%, 26% 52%, 18% 30%, 32% 12%);
+    }
+    /* Center content */
+    .hero-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 340px;
+    }
+    .hero-prize {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #c8f000;
+      line-height: 1;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .hero-name {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .hero-sub-bar {
+      background: #c8f000;
+      border-radius: 4px;
+      padding: 5px 16px;
+      display: inline-block;
+      margin-top: 12px;
+    }
+    .hero-sub-text {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #1a0a5e;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    /* Nav arrows */
+    .hero-nav {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.8);
+    }
+    .hero-nav.left { left: 12px; }
+    .hero-nav.right { right: 12px; }
+    /* Dots */
     .hero-dots {
       position: absolute;
-      bottom: 12px; left: 50%;
-      transform: translateX(-50%);
+      bottom: 12px; left: 50%; transform: translateX(-50%);
       display: flex; gap: 5px;
     }
-    .hero-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-    }
-    .hero-dot.active { background: #fff; width: 18px; border-radius: 3px; }
+    .hdot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); }
+    .hdot.on { background: #fff; width: 22px; border-radius: 4px; }
 
     /* League Lobbies */
     .league-section {
-      background: #f4f4f4;
       padding: 18px 24px 0;
     }
     .league-title {
-      font-size: 1rem; font-weight: 800;
-      color: #111; margin-bottom: 12px;
+      font-size: 1rem; font-weight: 800; color: #111; margin-bottom: 12px;
     }
-    .league-row {
-      display: flex; gap: 10px;
-    }
-    .league-chip {
-      display: flex; align-items: center; gap: 8px;
+    .league-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .league-card {
       background: #fff;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 999px;
-      padding: 7px 14px;
-      font-size: 0.78rem; font-weight: 700; color: #111;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600; color: #111;
+      min-width: 100px;
       cursor: pointer;
     }
-    .league-icon {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.6rem; font-weight: 800;
-    }
+    .l-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
     /* Blur overlay */
     .blur-overlay {
@@ -678,55 +742,65 @@
     </div>
   </nav>
 
-  <!-- Background — real Splash home page layout -->
+  <!-- Background — real Splash home page -->
   <div class="page-bg">
 
     <!-- QuickPicks strip -->
     <div class="qp-strip">
-      <div class="qp-badge">Quick<br>Picks</div>
-      <div class="qp-cards">
-        <div class="qp-card">
-          <div class="qp-avatar">MM</div>
-          <div class="qp-info">
-            <div class="qp-name">M. Machado · 3B</div>
-            <div class="qp-stat">Hits · Today at 6:40 PM</div>
+      <div class="qp-label">
+        <div class="qp-label-trending">TRENDING</div>
+        <div class="qp-label-name">QUICK<br>PICKS</div>
+        <div class="qp-arrow">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 1L1 6l5 5"/></svg>
+        </div>
+      </div>
+      <div class="qp-players">
+        <div class="qp-player">
+          <div class="qp-headshot">HH</div>
+          <div class="qp-details">
+            <div class="qp-player-name">H. Hall</div>
+            <div class="qp-contest">Charles Schwab Challenge · R2 · Today at 1:13 PM</div>
+            <div class="qp-stat-line">68.5 <span class="qp-stat-label">R2 STROKES</span></div>
           </div>
-          <div class="qp-btns">
-            <button class="qp-btn more">More</button>
-            <button class="qp-btn less">Less</button>
+          <div class="qp-more-less">
+            <button class="qp-ml-btn up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg> More</button>
+            <button class="qp-ml-btn dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg> Less</button>
           </div>
         </div>
-        <div class="qp-card">
-          <div class="qp-avatar">TB</div>
-          <div class="qp-info">
-            <div class="qp-name">T. Bradley · OF</div>
-            <div class="qp-stat">Total Bases · Today</div>
+        <div class="qp-player">
+          <div class="qp-headshot">RC</div>
+          <div class="qp-details">
+            <div class="qp-player-name">R. Castillo</div>
+            <div class="qp-contest">Charles Schwab Challenge · R2 · Today at 1:13 PM</div>
+            <div class="qp-stat-line">3.5 <span class="qp-stat-label">BIRDIES OR BETTER</span></div>
           </div>
-          <div class="qp-btns">
-            <button class="qp-btn more">More</button>
-            <button class="qp-btn less">Less</button>
-          </div>
-        </div>
-        <div class="qp-card">
-          <div class="qp-avatar">RG</div>
-          <div class="qp-info">
-            <div class="qp-name">R. Gray · SP</div>
-            <div class="qp-stat">Strikeouts · 5.5 Proj</div>
-          </div>
-          <div class="qp-btns">
-            <button class="qp-btn more">More</button>
-            <button class="qp-btn less">Less</button>
+          <div class="qp-more-less">
+            <button class="qp-ml-btn up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg> More</button>
+            <button class="qp-ml-btn dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg> Less</button>
           </div>
         </div>
-        <div class="qp-card">
-          <div class="qp-avatar">JA</div>
-          <div class="qp-info">
-            <div class="qp-name">J. Abreu · 1B</div>
-            <div class="qp-stat">RBI · Today at 8:10 PM</div>
+        <div class="qp-player">
+          <div class="qp-headshot">BH</div>
+          <div class="qp-details">
+            <div class="qp-player-name">B. Harman</div>
+            <div class="qp-contest">Charles Schwab Challenge · R2 · Today at 1:24 PM</div>
+            <div class="qp-stat-line">68.5 <span class="qp-stat-label">R2 STROKES</span></div>
           </div>
-          <div class="qp-btns">
-            <button class="qp-btn more">More</button>
-            <button class="qp-btn less">Less</button>
+          <div class="qp-more-less">
+            <button class="qp-ml-btn up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg> More</button>
+            <button class="qp-ml-btn dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg> Less</button>
+          </div>
+        </div>
+        <div class="qp-player">
+          <div class="qp-headshot">AS</div>
+          <div class="qp-details">
+            <div class="qp-player-name">A. Smalley</div>
+            <div class="qp-contest">Charles Schwab Challenge · R2 · Today at 1:35 PM</div>
+            <div class="qp-stat-line">68.5 <span class="qp-stat-label">R2 STROKES</span></div>
+          </div>
+          <div class="qp-more-less">
+            <button class="qp-ml-btn up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg> More</button>
+            <button class="qp-ml-btn dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg> Less</button>
           </div>
         </div>
       </div>
@@ -734,25 +808,38 @@
 
     <!-- Alert bar -->
     <div class="alert-bar">
-      <div class="alert-dot">1</div>
+      <div class="alert-circle">1</div>
       Contest needs your attention
-      <span style="margin-left:auto;font-size:0.75rem;color:#6b7280;">View all →</span>
+      <div class="alert-bar-right">
+        View all
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </div>
 
-    <!-- Hero carousel -->
-    <div class="hero-carousel">
+    <!-- Hero banner — $2M World Cup Survivor -->
+    <div class="hero">
       <div class="hero-lime"></div>
-      <div class="hero-player-shape"></div>
-      <div class="hero-player-shape2"></div>
-      <div class="hero-content">
-        <div class="hero-tag">Featured Contest</div>
-        <div class="hero-title">World Cup<br>Survivor II</div>
-        <div class="hero-sub">$100K Prize Pool · Group Stage + Knockout</div>
+      <div class="hero-oval"></div>
+      <div class="hero-player-l"></div>
+      <div class="hero-player-r"></div>
+      <div class="hero-center">
+        <div class="hero-prize">$2 MILLION</div>
+        <div class="hero-name">World Cup Survivor</div>
+        <div class="hero-sub-bar">
+          <div class="hero-sub-text">Group Stage + Knockout</div>
+        </div>
+      </div>
+      <div class="hero-nav left">
+        <svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 1L2 8l6 7"/></svg>
+      </div>
+      <div class="hero-nav right">
+        <svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 1l6 7-6 7"/></svg>
       </div>
       <div class="hero-dots">
-        <div class="hero-dot active"></div>
-        <div class="hero-dot"></div>
-        <div class="hero-dot"></div>
+        <div class="hdot on"></div>
+        <div class="hdot"></div>
+        <div class="hdot"></div>
+        <div class="hdot"></div>
       </div>
     </div>
 
@@ -760,21 +847,13 @@
     <div class="league-section">
       <div class="league-title">League Lobbies</div>
       <div class="league-row">
-        <div class="league-chip">
-          <div class="league-icon" style="background:#fff3e0;">🏈</div>NFL
-        </div>
-        <div class="league-chip">
-          <div class="league-icon" style="background:#e8f5e9;">⛳</div>PGA
-        </div>
-        <div class="league-chip">
-          <div class="league-icon" style="background:#e3f2fd;">⚽</div>World Cup
-        </div>
-        <div class="league-chip">
-          <div class="league-icon" style="background:#fce4ec;">🏀</div>WNBA
-        </div>
-        <div class="league-chip">
-          <div class="league-icon" style="background:#e8eaf6;">🏒</div>NHL
-        </div>
+        <div class="league-card"><div class="l-dot" style="background:#ef4444;"></div>NFL</div>
+        <div class="league-card"><div class="l-dot" style="background:#10b981;"></div>PGA</div>
+        <div class="league-card"><div class="l-dot" style="background:#ef4444;"></div>MLB</div>
+        <div class="league-card"><div class="l-dot" style="background:#f59e0b;"></div>NBA</div>
+        <div class="league-card"><div class="l-dot" style="background:#ec4899;"></div>NCAAB</div>
+        <div class="league-card"><div class="l-dot" style="background:#06b6d4;"></div>NCAAF</div>
+        <div class="league-card"><div class="l-dot" style="background:#8b5cf6;"></div>NHL</div>
       </div>
     </div>
 
