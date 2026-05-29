@@ -28,9 +28,9 @@ tags:
 
 ## Problem Statement
 
-Customer Support and Finance operators investigate transaction-related tickets daily — deposits not credited, withdrawal delays, incorrect balances — but the transaction history view in Splash Admin is too hard to read. Key fields have no visual hierarchy, transaction types are displayed as internal codes operators must memorize, and there is no visual way to distinguish one transaction category from another.
+Customer Support and Trust and Safety operators investigate transaction-related tickets daily, but the transaction history view in Splash Admin is too hard to read. Key fields have no visual hierarchy, and it's hard to distinguish one transaction category from another.
 
-Scanning a user's history to find all deposits, or all failed transactions, requires reading every row individually. A task that should take seconds takes minutes of manual interpretation, slowing ticket resolution and driving unnecessary escalations to engineering.
+Scanning a user's history to find all deposits, or all failed transactions, requires reading every row individually. A task that should take seconds takes minutes of manual interpretation, slowing ticket resolution and account review.
 
 ## User Stories
 
