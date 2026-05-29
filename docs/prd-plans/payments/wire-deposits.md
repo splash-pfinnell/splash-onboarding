@@ -43,11 +43,11 @@ The Splash Sports deposit page offers no wire transfer option. Users who want to
 1. The system SHALL display a Wire Transfer option at the bottom of the deposit page for all logged-in users located in an allowed state.
 2. When a user selects the Wire Transfer option, the system SHALL display a read-only wire instructions screen containing all of the following:
    a. Minimum wire amount: **$10,000.00** — with a note that wires under this amount will be returned and users should use Aeropay (Online Banking) for smaller deposits.
-   b. A notice that the name on the user's bank account must match the name on their Splash Sports account, displaying the user's Splash Sports account name.
+   b. A notice that the name on the user's bank account must match the name on their Splash Sports account. The user's account name is NOT displayed — the notice is static text only.
    c. Deadline: wires must be received Monday–Friday by 4:00 PM EST to be posted the same day.
    d. Location notice: the user must be in a valid (allowed) state for credit to be posted to their account.
    e. Splash Sports bank account details: Receiving Bank Name, Receiving Bank Address, ABA/Routing Number, Account Number, Beneficiary Bank Account Title, Beneficiary Address.
-   f. Reference field value: the user's Splash Sports account email.
+   f. Reference field value: the static label "Your Splash Sports Email Address" — the user's actual email is NOT displayed dynamically.
    g. Restriction notice: US banks only.
    h. Closing instruction: "To ensure proper posting, please adhere to the exact wire transfer instructions provided above."
 3. The wire instructions screen SHALL provide a way for the user to close/dismiss the screen and return to the deposit page. No further action is required from the user within the app.
@@ -56,7 +56,7 @@ The Splash Sports deposit page offers no wire transfer option. Users who want to
 
 ### Non-Functional Requirements
 
-_To be defined. Consider: security review of how bank account details are stored and served (mock data used in development; production values provided by finance before launch), PII handling for the user's account name and email displayed in instructions, and performance impact of the wire instructions screen load._
+_To be defined. Consider: security review of how bank account details are stored and served, and performance impact of the wire instructions screen load. Note: no PII (user name or email) is displayed dynamically in the instructions — all content is static text._
 
 ## Success Metrics
 
@@ -73,7 +73,7 @@ _To be defined. Consider: security review of how bank account details are stored
 
 - Wire Transfer entry point at the bottom of the deposit page (all logged-in users in allowed states)
 - Read-only wire instructions screen with all required bank and procedural details
-- Dynamic display of the user's Splash Sports account name and email in the instructions
+- Static wire instructions screen — no dynamic user data (name or email) displayed
 - Dismiss/close action returning the user to the deposit page
 - Location-based visibility gating (allowed states only)
 
@@ -87,11 +87,11 @@ _To be defined. Consider: security review of how bank account details are stored
 ## Acceptance Criteria
 
 - Given a logged-in user in an allowed state is on the deposit page, when the page loads, then a Wire Transfer option is visible at the bottom of the deposit page.
-- Given the user taps/clicks Wire Transfer, when the instructions screen opens, then all required content is displayed: minimum amount ($10,000), sub-minimum return notice, Aeropay alternative note, name-match notice with the user's account name, Monday–Friday 4:00 PM EST deadline, location notice, Splash Sports bank details, the user's Splash Sports email as the Reference value, US banks only notice, and the closing instruction.
+- Given the user taps/clicks Wire Transfer, when the instructions screen opens, then all required content is displayed: minimum amount ($10,000), sub-minimum return notice, Aeropay alternative note, name-match notice (static, no name inserted), Monday–Friday 4:00 PM EST deadline, location notice, Splash Sports bank details, "Your Splash Sports Email Address" as the Reference value, US banks only notice, and the closing instruction.
 - Given the wire instructions screen is open, when the user taps/clicks the close/dismiss action, then they are returned to the deposit page.
 - Given a user is not logged in or is located in a restricted state, when the deposit page loads, then the Wire Transfer option is not visible.
-- Given the wire instructions screen is open, when the user views the account name field, then it displays the name on their Splash Sports account.
-- Given the wire instructions screen is open, when the user views the Reference field, then it displays their Splash Sports account email.
+- Given the wire instructions screen is open, when the user views the name-match notice, then it reads "The name on your bank account must match the name on your Splash Sports account" with no dynamic name inserted.
+- Given the wire instructions screen is open, when the user views the Reference field, then it displays the static label "Your Splash Sports Email Address".
 
 ## Dependencies
 
@@ -102,7 +102,7 @@ _To be defined. Consider: security review of how bank account details are stored
   - Account Number: 1919364
   - Beneficiary Bank Account Title: Splash Player Reserve LLC
   - Beneficiary Address: 2261 Market Street, Suite 86366, San Francisco, CA 94114
-  - Reference: User's Splash Sports account email (dynamic)
+  - Reference: "Your Splash Sports Email Address" (static label — no dynamic email displayed)
 - **Allowed state list** — Wire deposit visibility uses the same allowed-state gating as other deposit methods. Engineering must confirm which existing gate to hook into.
 - **VP of Finance wire review process** — Incoming wires are manually reviewed and approved or denied by the VP of Finance. The ops workflow (how finance is notified of incoming wires, how approval/denial is communicated to the user) must be defined before launch.
 - **Deposit page** — The existing deposit page at `https://app.splashsports.com/home` must support adding a Wire Transfer entry point at the bottom.
