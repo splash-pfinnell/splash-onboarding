@@ -114,15 +114,15 @@
     .main {
       flex: 1;
       overflow-y: auto;
-      background: #f3f4f6;
+      background: #111827;
       display: flex;
       flex-direction: column;
     }
 
     /* ── Top bar (breadcrumb + actions) ── */
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
+      background: #1f2937;
+      border-bottom: 1px solid #374151;
       padding: 10px 20px;
       display: flex;
       align-items: center;
@@ -133,7 +133,7 @@
       align-items: center;
       gap: 6px;
       font-size: 0.8rem;
-      color: #6b7280;
+      color: #9ca3af;
     }
     .breadcrumb .crumb-link {
       color: #35A59E;
@@ -143,24 +143,24 @@
       gap: 4px;
       cursor: pointer;
     }
-    .breadcrumb .sep { color: #d1d5db; }
-    .breadcrumb .crumb-current { color: #111827; font-weight: 600; }
+    .breadcrumb .sep { color: #374151; }
+    .breadcrumb .crumb-current { color: #f9fafb; font-weight: 600; }
     .topbar-actions { display: flex; gap: 8px; }
     .btn-reset {
-      background: #fff;
-      border: 1px solid #d1d5db;
-      color: #374151;
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      color: #d1d5db;
       border-radius: 6px;
       padding: 6px 12px;
       font-size: 0.78rem;
       font-weight: 500;
       cursor: pointer;
     }
-    .btn-reset:hover { background: #f9fafb; }
+    .btn-reset:hover { background: #374151; }
     .btn-disable {
-      background: #fff;
-      border: 1px solid #fca5a5;
-      color: #ef4444;
+      background: #1f2937;
+      border: 1px solid #f87171;
+      color: #f87171;
       border-radius: 6px;
       padding: 6px 12px;
       font-size: 0.78rem;
@@ -180,8 +180,8 @@
 
     /* ── User header ── */
     .user-header {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
+      background: #1f2937;
+      border-bottom: 1px solid #374151;
       padding: 16px 20px;
       display: flex;
       align-items: center;
@@ -190,7 +190,7 @@
     .user-avatar {
       width: 44px; height: 44px;
       border-radius: 50%;
-      background: #6b7280;
+      background: #4b5563;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -199,8 +199,8 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
-    .user-name { font-size: 1.3rem; font-weight: 700; color: #111827; }
-    .user-sub { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+    .user-name { font-size: 1.3rem; font-weight: 700; color: #f9fafb; }
+    .user-sub { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
     .overview-link {
       font-size: 0.78rem;
       color: #35A59E;
@@ -218,8 +218,8 @@
 
     /* ── History card ── */
     .history-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
+      background: #1f2937;
+      border: 1px solid #374151;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -228,7 +228,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 20px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid #374151;
       cursor: pointer;
     }
     .history-title {
@@ -237,14 +237,14 @@
       gap: 8px;
       font-size: 0.9rem;
       font-weight: 700;
-      color: #111827;
+      color: #f9fafb;
     }
-    .history-title svg { width: 16px; height: 16px; color: #6b7280; }
-    .history-chevron { color: #9ca3af; font-size: 0.75rem; }
+    .history-title svg { width: 16px; height: 16px; color: #9ca3af; }
+    .history-chevron { color: #6b7280; font-size: 0.75rem; }
 
     /* ── Color legend ── */
     .legend-dropdown {
-      border: 1px solid #e5e7eb;
+      border: 1px solid #374151;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -253,14 +253,14 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
-      background: #fff;
+      background: #1f2937;
       cursor: pointer;
       user-select: none;
       font-size: 0.78rem;
       font-weight: 600;
-      color: #374151;
+      color: #d1d5db;
     }
-    .legend-toggle:hover { background: #f9fafb; }
+    .legend-toggle:hover { background: #283548; }
     .legend-toggle-left {
       display: flex;
       align-items: center;
@@ -268,7 +268,7 @@
     }
     .legend-chevron {
       font-size: 0.65rem;
-      color: #9ca3af;
+      color: #6b7280;
       transition: transform 0.2s;
     }
     .legend-chevron.open { transform: rotate(180deg); }
@@ -277,8 +277,8 @@
       flex-wrap: wrap;
       gap: 8px;
       padding: 12px 16px 14px;
-      background: #f9fafb;
-      border-top: 1px solid #e5e7eb;
+      background: #162032;
+      border-top: 1px solid #374151;
     }
     .legend-body.open { display: flex; }
     .legend-item {
@@ -286,14 +286,14 @@
       align-items: center;
       gap: 6px;
       font-size: 0.72rem;
-      color: #374151;
+      color: #d1d5db;
       font-weight: 500;
     }
     .legend-swatch {
       width: 12px;
       height: 12px;
       border-radius: 3px;
-      border: 1px solid rgba(0,0,0,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     /* ── Table ── */
@@ -314,31 +314,31 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       padding: 8px 12px;
-      border-bottom: 1px solid #e5e7eb;
-      background: #fff;
+      border-bottom: 1px solid #374151;
+      background: #1f2937;
       white-space: nowrap;
     }
     tbody tr {
-      border-bottom: 1px solid rgba(0,0,0,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
       transition: filter 0.1s;
     }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { filter: brightness(0.97); }
+    tbody tr:hover { filter: brightness(1.1); }
     tbody td {
       padding: 9px 12px;
       vertical-align: middle;
-      color: #111827;
+      color: #e5e7eb;
     }
 
-    /* ── Row colors per transaction type ── */
-    tr.type-deposit         { background: #f0fdf4; }
-    tr.type-entry           { background: #eff6ff; }
-    tr.type-slip-entry      { background: #e0f2fe; }
-    tr.type-payout          { background: #fffbeb; }
-    tr.type-slip-payout     { background: #fefce8; }
-    tr.type-canceled        { background: #fff7ed; }
-    tr.type-withdrawal      { background: #fff5f5; }
-    tr.type-bonus           { background: #f0fdfa; }
+    /* ── Row colors per transaction type (dark mode) ── */
+    tr.type-deposit         { background: #14301e; }
+    tr.type-entry           { background: #1a2744; }
+    tr.type-slip-entry      { background: #0c2a3a; }
+    tr.type-payout          { background: #2e2008; }
+    tr.type-slip-payout     { background: #2a2200; }
+    tr.type-canceled        { background: #2e1a08; }
+    tr.type-withdrawal      { background: #2e1010; }
+    tr.type-bonus           { background: #0a2826; }
 
     /* ── Type badge ── */
     .type-badge {
@@ -395,9 +395,9 @@
     .mono {
       font-family: 'SF Mono', 'Fira Code', monospace;
       font-size: 0.7rem;
-      color: #6b7280;
+      color: #9ca3af;
     }
-    .dash { color: #d1d5db; }
+    .dash { color: #4b5563; }
   </style>
 </head>
 <body>
