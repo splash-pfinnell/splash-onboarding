@@ -44,10 +44,9 @@ Scanning a user's history to find all deposits, or all failed transactions, requ
 
 1. The system SHALL display a Transaction History section on the Splash Admin user detail page listing all transactions for that user.
 2. Each transaction row SHALL display at a glance: human-readable transaction type label, amount, status badge, and timestamp.
-3. Transaction types SHALL be displayed as human-readable labels (e.g. "Deposit", "Withdrawal", "Contest Entry", "Bonus Credit") rather than internal codes or enum values.
-4. Transaction status SHALL be displayed as a colored status badge with one of the following states: Completed, Pending, Failed, Reversed.
-5. Transactions SHALL be displayed in reverse-chronological order (newest first).
-6. Each transaction row SHALL be color-coded by transaction type per the following assignments:
+3. Transaction status SHALL be displayed as a colored status badge with one of the following states: Completed, Pending, Failed, Reversed.
+4. Transactions SHALL be displayed in reverse-chronological order (newest first).
+5. Each transaction row SHALL be color-coded by transaction type per the following assignments:
 
    | Transaction Type | Row Color |
    |---|---|
@@ -59,7 +58,7 @@ Scanning a user's history to find all deposits, or all failed transactions, requ
    | Contest / Entry Canceled | Orange |
    | Withdrawal | Red |
    | Bonus | Teal (Splash Sports brand teal) |
-7. Each transaction row SHALL support expansion to reveal secondary fields: transaction ID, linked slip or contest ID (where applicable), and any additional diagnostic fields confirmed with engineering.
+6. Each transaction row SHALL support expansion to reveal secondary fields: transaction ID, linked slip or contest ID (where applicable), and any additional diagnostic fields confirmed with engineering.
 
 ### Non-Functional Requirements
 
