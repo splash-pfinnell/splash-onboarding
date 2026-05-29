@@ -70,6 +70,7 @@ _To be defined. Consider: access control (which Admin roles can view transaction
 | Metric | Baseline | Target | Measurement |
 |---|---|---|---|
 | Engineering escalations for transaction lookups | TBD | 0 | Escalation tracking |
+| Metabase transaction queries run by CS / T&S | TBD | Reduced | Metabase query logs |
 | Operator time to identify a transaction type/status | TBD | < 5 sec | Operator observation / usability test |
 | Support tickets requiring Admin-to-external-tool context switch | TBD | Reduced | Operator survey / ticket notes |
 
