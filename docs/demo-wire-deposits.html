@@ -891,6 +891,9 @@
     document.getElementById('toggleMobile').classList.toggle('active', view === 'mobile');
     document.getElementById('toggleWeb').classList.toggle('active', view === 'web');
   }
+  // Auto-switch based on ?view= param
+  const urlView = new URLSearchParams(window.location.search).get('view');
+  if (urlView === 'web') showView('web');
   function openMobileWire() {
     document.getElementById('mDepositPage').classList.add('pushed');
     document.getElementById('mWirePanel').classList.add('open');
