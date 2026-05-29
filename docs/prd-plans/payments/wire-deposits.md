@@ -95,7 +95,14 @@ _To be defined. Consider: security review of how bank account details are stored
 
 ## Dependencies
 
-- **Bank account details** — Mock data is used during development. Production bank details (Receiving Bank Name, Receiving Bank Address, ABA/Routing Number, Account Number, Beneficiary Bank Account Title, Beneficiary Address) must be provided by finance/treasury and confirmed before launch.
+- **Bank account details** — Production bank details confirmed by finance/treasury:
+  - Receiving Bank Name: MVB Bank, Inc.
+  - Receiving Bank Address: 301 Virginia Avenue, Fairmont, WV 26554
+  - ABA / Routing Number: 051504597
+  - Account Number: 1919364
+  - Beneficiary Bank Account Title: Splash Player Reserve LLC
+  - Beneficiary Address: 2261 Market Street, Suite 86366, San Francisco, CA 94114
+  - Reference: User's Splash Sports account email (dynamic)
 - **Allowed state list** — Wire deposit visibility uses the same allowed-state gating as other deposit methods. Engineering must confirm which existing gate to hook into.
 - **VP of Finance wire review process** — Incoming wires are manually reviewed and approved or denied by the VP of Finance. The ops workflow (how finance is notified of incoming wires, how approval/denial is communicated to the user) must be defined before launch.
 - **Deposit page** — The existing deposit page at `https://app.splashsports.com/home` must support adding a Wire Transfer entry point at the bottom.
@@ -111,7 +118,7 @@ _To be defined. Consider: security review of how bank account details are stored
 
 ## Open Questions
 
-1. What are the exact production bank account details (routing number, account number, beneficiary info) and who owns keeping them current? _(Mock data used during development; finance/treasury to provide production values before launch.)_
+1. ~~What are the exact production bank account details?~~ ✅ **Resolved** — MVB Bank, Inc. · Routing 051504597 · Account 1919364 · Splash Player Reserve LLC · 2261 Market Street Suite 86366, San Francisco CA 94114.
 2. How is the VP of Finance notified when a wire arrives for review? What is the communication flow back to the user when a wire is approved or denied? _(Ops workflow must be defined before launch.)_
 3. Should the Wire Transfer option be surfaced in-app only, or also via email/push to users who may be interested?
 
