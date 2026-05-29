@@ -77,7 +77,6 @@ _To be defined. Consider: access control (which Admin roles can view transaction
 ### In Scope
 
 - Redesigned transaction history section on the Admin user detail page
-- Human-readable transaction type labels replacing internal codes
 - Colored status badges (Completed, Pending, Failed, Reversed)
 - Color-coded row styling — one distinct color per transaction type category
 - Expandable transaction rows with secondary fields (transaction ID, linked slip/contest ID)
