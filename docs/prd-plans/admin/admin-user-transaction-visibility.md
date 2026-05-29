@@ -34,9 +34,8 @@ Scanning a user's history to find all deposits, or all failed transactions, requ
 
 ## User Stories
 
-- As a **Customer Support operator**, I want to see a user's transaction history in a clear, scannable format, so that I can quickly understand what happened to a user's account without escalating to engineering.
-- As a **Customer Support operator**, I want transaction types and statuses shown in plain language (not internal codes), so that I can read the history without needing to memorize what each code means.
-- As a **Customer Support operator**, I want transaction rows color-coded by type, so that I can visually scan a user's history and locate the relevant transaction category instantly without reading every row.
+- As a **CS or T&S agent**, I want to see a user's transaction history in a clear, scannable format, so that I can quickly understand what happened to a user's account without using Metabase.
+- As a **CS or T&S agent**, I want transaction rows color-coded by type, so that I can visually scan a user's history and locate the relevant transaction category instantly without reading every row.
 - As a **Finance operator**, I want to see type, amount, status, and timestamp at a glance for each transaction, so that I can investigate balance discrepancies without leaving the Admin user detail page.
 
 ## Requirements
