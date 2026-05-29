@@ -243,14 +243,44 @@
     .history-chevron { color: #9ca3af; font-size: 0.75rem; }
 
     /* ── Color legend ── */
-    .legend {
+    .legend-dropdown {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .legend-toggle {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    .legend-toggle:hover { background: #f9fafb; }
+    .legend-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-chevron {
+      font-size: 0.65rem;
+      color: #9ca3af;
+      transition: transform 0.2s;
+    }
+    .legend-chevron.open { transform: rotate(180deg); }
+    .legend-body {
+      display: none;
       flex-wrap: wrap;
       gap: 8px;
-      padding: 12px 20px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 16px 14px;
       background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
     }
+    .legend-body.open { display: flex; }
     .legend-item {
       display: flex;
       align-items: center;
@@ -471,9 +501,15 @@
     <div class="content">
 
       <!-- Legend -->
-      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 20px;">
-        <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Transaction Type Color Key</div>
-        <div class="legend">
+      <div class="legend-dropdown">
+        <div class="legend-toggle" onclick="toggleLegend(this)">
+          <div class="legend-toggle-left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Transaction Type Color Key
+          </div>
+          <span class="legend-chevron">▼</span>
+        </div>
+        <div class="legend-body">
           <div class="legend-item"><div class="legend-swatch" style="background:#22c55e;"></div> Deposit</div>
           <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;"></div> Entry</div>
           <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;"></div> Slip Entry</div>
@@ -676,5 +712,13 @@
   </main>
 </div>
 
+<script>
+  function toggleLegend(toggle) {
+    const body = toggle.nextElementSibling;
+    const chevron = toggle.querySelector('.legend-chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+</script>
 </body>
 </html>
