@@ -28,18 +28,19 @@ tags:
 > **Status:** `1pager-draft` · **Domain:** admin · **Product line:** internal-tool · **Author:** pfinnell
 
 ## Why now
-Customer Support operators resolving deposit disputes have no way to initiate a refund from Splash Admin. Every refund requires escalating to engineering or switching to a separate payment tool, adding unnecessary handling time and engineering load for a routine, high-frequency support action.
+T&S and CS agents process deposit refunds through the Adjust Balance section of Admin, which requires navigating away from the user's transaction history, manually copying and pasting transaction IDs, and cross-referencing two screens to confirm the outcome. This is friction on a routine, high-frequency support action.
 
 ## Problem
-There is no Refund action on the Admin user detail page. Operators who need to reverse a deposit must leave Admin, engage engineering, and manually verify the result — a multi-step, multi-person process for what should be a single operator action.
+There is no Refund action on the transaction tab. Operators must leave the transaction history, use Adjust Balance with a manual transaction ID lookup, and return to verify the result. There is no in-context visibility into which deposits have already been refunded.
 
 ## Who
 Customer Support operators who handle deposit disputes and Finance operators who oversee refund accuracy. Deposit refunds are a recurring support workflow.
 
 ## Solution sketch
 - Add a Refund button to deposit transaction rows on the Admin user detail page, visible only to authorized roles.
-- Require an explicit confirmation step before processing.
-- Reflect the updated transaction status (Reversed) immediately after a successful refund.
+- Require an explicit confirmation dialog before processing — defaults to the full deposit amount.
+- Include a partial refund checkbox in the dialog; when checked, an amount input appears for the operator to enter a custom amount.
+- Reflect the updated transaction status (Refunded) immediately after a successful refund.
 - Show a clear error message if the refund fails.
 
 ## Success signals
@@ -47,11 +48,11 @@ Engineering escalations for deposit refund processing drop to zero. Operators ca
 
 | Metric | Baseline | Target |
 |---|---|---|
-| Engineering escalations for deposit refunds | TBD | 0 |
 | Operator time to process a deposit refund | TBD | < 2 min |
+| Clear visibility into refunded deposits | None | Refunded status visible on transaction row |
 
 ## Risks & unknowns
 The full downstream call chain for a refund (wallet, ledger, payment processor) needs an engineering spike before scoping. Eligibility rules (which deposits can be refunded) and role-based access control must be confirmed before implementation.
 
 ## Out of scope
-Refunds on non-deposit transaction types. Partial refunds. Manual balance adjustments. Transaction display improvements (see Admin User Transaction Visibility PRD).
+Refunds on non-deposit transaction types. Manual balance adjustments. Transaction display improvements (see Admin User Transaction Visibility PRD).

@@ -2,7 +2,7 @@
 type: prd
 title: "Admin User Transaction History — Deposit Refunds"
 slug: admin-user-transaction-history
-version: 1.1.0
+version: 1.2.0
 template_version: 1.3.0
 domain: admin
 product_line: internal-tool
@@ -31,12 +31,14 @@ tags:
 
 ## Problem Statement
 
-Customer Support operators resolving deposit disputes currently have no way to initiate a refund from Splash Admin. They must escalate to engineering or switch to a separate payment tool to process the refund, then manually verify the outcome back in Admin. This adds unnecessary handling time and engineering load for a routine support action.
+T&S and CS agents currently process deposit refunds through the Adjust Balance section of Splash Admin, which requires navigating away from the user's transaction history. This flow forces operators to manually copy and paste transaction IDs to complete a refund, and provides no visibility into which deposits have already been refunded — leaving agents to cross-reference information across two separate screens.
+
+Refunding a deposit should be possible directly from the transaction tab, keeping the operator in context, eliminating manual ID lookups, and making refund status immediately visible on the transaction record.
 
 ## User Stories
 
-- As a **Customer Support operator**, I want to initiate a refund on a deposit transaction directly from the transaction history page, so that I can resolve deposit disputes without escalating to engineering or switching to another tool.
-- As a **Finance operator**, I want refunded deposits to reflect their updated status on the transaction history page immediately after a refund is processed, so that I have an accurate view of a user's transaction state.
+- As a **T&S or CS agent**, I want to initiate a refund on a deposit transaction directly from the transaction history page, without switching to another tab or copying a specific transaction ID.
+- As a **T&S or CS agent**, I want refunded deposits to reflect their updated status on the transaction history page immediately after a refund is processed, so that I have an accurate view of a user's transaction status.
 
 ## Requirements
 
@@ -44,21 +46,30 @@ Customer Support operators resolving deposit disputes currently have no way to i
 
 1. Deposit transactions on the Admin user detail page SHALL display a Refund action accessible to authorized operators.
 2. The Refund action SHALL require an explicit confirmation step before the refund is processed.
-3. Upon successful refund, the transaction row SHALL reflect the updated status (Reversed) without requiring a full page reload.
+3. Upon successful refund, the transaction row SHALL reflect the updated status (Refunded) without requiring a full page reload.
 4. If a refund fails, the operator SHALL be presented with a clear error message indicating the failure reason.
 5. The Refund action SHALL be gated behind a specific Admin role or permission — not visible or actionable to unauthorized roles.
 6. Only deposit transactions SHALL have the Refund action — other transaction types (withdrawals, contest entries, bonus credits) SHALL NOT expose this action.
+7. If a deposit is ineligible for refund (e.g. already refunded, funds already spent, payment method restriction), the Refund button SHALL be replaced with a disabled state and a brief reason label (e.g. "Already refunded", "Ineligible") — the action SHALL NOT be silently hidden.
+8. A deposit that has already been successfully refunded SHALL display its status as Refunded and SHALL NOT present a Refund action.
+9. The confirmation dialog SHALL default to a full refund of the deposit amount.
+10. The confirmation dialog SHALL include a checkbox to enable a partial refund. When checked, an amount input field SHALL appear allowing the operator to enter a custom refund amount.
+11. The partial refund amount SHALL be validated to be greater than zero and no greater than the original deposit amount before submission is allowed.
 
 ### Non-Functional Requirements
 
-_To be defined. Consider: audit logging for all refund actions (who initiated, when, amount), idempotency to prevent duplicate refund submissions, timeout handling if the payment processor is slow, and role-based access control integration._
+7. Every refund action SHALL produce an immutable audit log entry capturing: operator identity, timestamp, transaction ID, deposit amount, and outcome (success or failure with reason).
+8. The Refund API call SHALL be idempotent — submitting the same refund request more than once SHALL NOT result in a duplicate refund.
+9. The Refund button SHALL be disabled immediately upon first submission and remain disabled until a success or failure response is received, preventing double-submission.
+10. If the payment processor does not respond within a configurable timeout, the operator SHALL see a timeout error and the transaction status SHALL remain unchanged.
+11. Role-based access control enforcement SHALL occur server-side — the Refund action SHALL be rejected at the API level for unauthorized roles regardless of client-side visibility.
 
 ## Success Metrics
 
 | Metric | Baseline | Target | Measurement |
 |---|---|---|---|
-| Engineering escalations for deposit refund processing | TBD | 0 | Escalation tracking |
 | Operator time to process a deposit refund | TBD | < 2 min | Support ticket handle time |
+| Clear visibility into refunded deposits | None | Refunded status visible on transaction row | Operator observation / usability test |
 
 ## Scope
 
@@ -66,6 +77,7 @@ _To be defined. Consider: audit logging for all refund actions (who initiated, w
 
 - Refund action on deposit transactions (authorized roles only)
 - Confirmation dialog before refund is processed
+- Full refund defaulted in the confirmation dialog, with a partial refund option via checkbox and amount input
 - Updated transaction status after successful refund
 - Error state handling for failed refunds
 - Role-based access control for the Refund action
@@ -73,7 +85,7 @@ _To be defined. Consider: audit logging for all refund actions (who initiated, w
 ### Out of Scope
 
 - Refunds on non-deposit transaction types (withdrawals, contest entries, bonus credits)
-- Partial refunds — full deposit refund only in v1
+- Refunds on non-deposit transaction types beyond what is already excluded above
 - Manual balance adjustments or credits
 - Exporting or downloading transaction history
 - Transaction display improvements (covered by Admin User Transaction Visibility PRD)
@@ -81,11 +93,19 @@ _To be defined. Consider: audit logging for all refund actions (who initiated, w
 ## Acceptance Criteria
 
 - Given a deposit transaction is displayed, when an authorized operator views it, then a Refund button is present and actionable.
-- Given an operator clicks Refund, when the confirmation dialog appears, then the operator must confirm before the refund is processed.
-- Given an operator confirms the refund, when the refund is successfully processed, then the transaction row status updates to Reversed.
+- Given an operator clicks Refund, when the confirmation dialog appears, then the full deposit amount is pre-filled and the operator must confirm before the refund is processed.
+- Given the confirmation dialog is open, when the operator checks the partial refund checkbox, then an amount input field appears.
+- Given the partial refund amount input is visible, when the operator enters an amount greater than zero and no greater than the deposit amount, then the submit button is enabled.
+- Given the partial refund amount is invalid (zero, negative, or exceeds deposit), when the operator attempts to submit, then an inline validation error is shown and submission is blocked.
+- Given an operator confirms the refund, when the refund is successfully processed, then the transaction row status updates to Refunded.
 - Given a refund fails, when the failure occurs, then the operator sees a clear error message and the transaction status is unchanged.
+- Given a user does not have sufficient balance to cover the refund amount, when the refund is submitted, then the refund fails and the operator is shown an error indicating insufficient balance.
 - Given an unauthorized operator views a deposit transaction, when they view the row, then no Refund button is visible.
 - Given a non-deposit transaction is displayed, when any operator views it, then no Refund button is present.
+- Given a deposit is ineligible for refund, when an authorized operator views it, then a disabled Refund button with a reason label is shown (not silently hidden).
+- Given a deposit has already been refunded, when any operator views it, then the transaction status shows Refunded and no Refund button is present.
+- Given an operator submits a refund, when the request is in flight, then the Refund button is disabled until a response is received.
+- Given a refund is initiated, then an audit log entry is created capturing the operator identity, timestamp, transaction ID, amount, and outcome.
 
 ## Dependencies
 
@@ -93,7 +113,8 @@ _To be defined. Consider: audit logging for all refund actions (who initiated, w
 - **Refund API** — Engineering must identify or build the API endpoint that processes deposit refunds and returns updated transaction state. Owner TBD.
 - **Payment processor** — Downstream integration with the payment processor that handles the actual refund settlement.
 - **Wallet / ledger service** — Refunds likely affect wallet balance and must be reflected accurately in the ledger.
-- **Admin RBAC** — Role-based access control must support a permission that gates the Refund action.
+- **Admin RBAC** — Role-based access control must support a permission that gates the Refund action. Enforcement must occur server-side, not just client-side.
+- **Audit log / event store** — A durable store must exist (or be created) for refund action audit entries. Owner TBD.
 
 ## Risks & Mitigations
 
