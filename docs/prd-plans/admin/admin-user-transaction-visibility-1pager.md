@@ -37,7 +37,7 @@ Customer Support operators and Finance operators who investigate user account is
 
 ## Solution sketch
 - Display each transaction row with a clear visual hierarchy: human-readable type label, amount, status badge, and timestamp visible at a glance.
-- Color-code each transaction row by type with the following assignments: Deposit=Green, Entry=Blue, Slip Entry=Light Blue, Payout=Gold, Slip Payout=Yellow, Contest/Entry Canceled=Orange, Withdrawal=Red, Bonus=Teal (Splash Sports brand teal).
+- Color-code each transaction row by type with the following assignments: Deposit=Green, Entry=Blue, Slip Entry=Light Blue, Payout=Gold, Slip Payout=Yellow, Contest/Entry Canceled=Grey, Withdrawal=Red, Bonus=Teal (Splash Sports brand teal).
 - Replace internal type codes and enum values with human-readable labels.
 - Show a colored status badge (Completed, Pending, Failed, Reversed) per transaction.
 - Support row expansion to reveal secondary fields (transaction ID, linked slip/contest ID).
