@@ -56,7 +56,7 @@
     }
 
     .sidebar {
-      width: 200px;
+      width: 180px;
       flex-shrink: 0;
       background: #1f2937;
       border-right: 1px solid #374151;
@@ -163,19 +163,21 @@
     .pause-all-banner.visible { display: flex; }
     .pause-all-banner svg { flex-shrink: 0; }
 
-    /* Settings tab top row */
-    .settings-toprow {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      gap: 20px;
+    .section-intro {
+      margin-bottom: 16px;
     }
     .section-intro p {
       font-size: 0.83rem;
       color: #9ca3af;
-      max-width: 580px;
       line-height: 1.5;
+    }
+
+    /* Pause All row */
+    .settings-toprow {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 16px;
     }
 
     /* Pause All control */
@@ -212,11 +214,18 @@
       background: #1f2937;
       border: 1px solid #374151;
       border-radius: 10px;
-      padding: 16px 20px;
+      padding: 14px 16px;
       display: grid;
-      grid-template-columns: 180px 1fr 160px 200px;
+      grid-template-columns: 140px 120px 140px 1fr;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+    }
+    @media (max-width: 700px) {
+      .method-card {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+      .method-name { grid-column: 1 / -1; }
     }
     .method-card.paused { border-color: #f59e0b44; }
     .method-name {
@@ -499,10 +508,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           All GC Trusted automation is paused — new withdrawal requests are being routed to the manual queue.
         </div>
+        <div class="section-intro">
+          <p>GC Trusted automation settings apply higher thresholds for trusted users. A withdrawal is auto-processed when it is at or below the method threshold — the number of linked payment methods is <strong>not</strong> a condition for this tier. Changes require confirmation and take effect immediately.</p>
+        </div>
         <div class="settings-toprow">
-          <div class="section-intro">
-            <p>GC Trusted automation settings apply higher thresholds for trusted users. A withdrawal is auto-processed when it is at or below the method threshold <em>and</em> the user has exactly one linked payment method. Changes require confirmation and take effect immediately.</p>
-          </div>
           <div class="pause-all-control" id="pause-all-ctrl-gc">
             <div class="pause-all-label">Pause All</div>
             <label class="toggle">
@@ -617,10 +626,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           All Secondary automation is paused — new withdrawal requests are being routed to the manual queue.
         </div>
+        <div class="section-intro">
+          <p>Secondary automation settings apply to standard users. A withdrawal is auto-processed when it is at or below the method threshold <em>and</em> the user has exactly one linked payment method. Changes require confirmation and take effect immediately.</p>
+        </div>
         <div class="settings-toprow">
-          <div class="section-intro">
-            <p>Secondary automation settings apply to standard users. A withdrawal is auto-processed when it is at or below the method threshold <em>and</em> the user has exactly one linked payment method. Changes require confirmation and take effect immediately.</p>
-          </div>
           <div class="pause-all-control" id="pause-all-ctrl-secondary">
             <div class="pause-all-label">Pause All</div>
             <label class="toggle">
