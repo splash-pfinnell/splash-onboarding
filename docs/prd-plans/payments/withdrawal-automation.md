@@ -46,11 +46,9 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 2. Each settings tab SHALL display one row per supported payment method: **Aeropay, Card, PayPal, Venmo, Skrill**.
 3. Each row SHALL display the payment method name, its threshold (or "Manual only" for Skrill), its pause state, and the last-modified timestamp and admin username.
 4. For methods with automation enabled (Aeropay, Card, PayPal, Venmo), each row SHALL provide an editable dollar amount field for the automation threshold.
-5. The system SHALL auto-process a withdrawal when ALL of the following conditions are met:
-   a. The withdrawal amount is at or below the method's configured threshold for the applicable tier.
-   b. The user has exactly one payment method linked to their account.
-   c. Automation for that method is not paused on that tier.
-   d. The "Pause All" toggle for that tier is not active.
+5. The system SHALL auto-process a withdrawal according to the tier it is evaluated under:
+   - **GC Trusted tier:** A withdrawal is auto-processed when (a) the withdrawal amount is at or below the method's configured threshold, (b) automation for that method is not paused, and (c) the Pause All toggle for the GC Trusted tier is not active. The number of payment methods linked to the user's account is NOT a condition for this tier.
+   - **Secondary tier:** A withdrawal is auto-processed when (a) the withdrawal amount is at or below the method's configured threshold, (b) the user has exactly one payment method linked to their account, (c) automation for that method is not paused, and (d) the Pause All toggle for the Secondary tier is not active.
 6. Withdrawals that do not meet all conditions in requirement 5 SHALL be routed to the existing manual withdrawal processing queue.
 7. Each method row SHALL provide a pause/resume toggle that immediately halts automated processing of **new** withdrawal requests for that method on that tier.
 8. Each settings tab SHALL display a **Pause All** toggle in the top-right corner that immediately halts all automation on that tier, regardless of individual method settings. Pausing all SHALL require the same confirmation dialog as individual method changes.

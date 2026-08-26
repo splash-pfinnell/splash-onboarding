@@ -39,7 +39,10 @@ Internal admins (Finance, Compliance, Risk) with access to the Payments admin pa
 ## Solution sketch
 Add a **Withdrawal Automation** tab to the Payments admin page with a row per payment method: **Aeropay, Card, PayPal, Skrill, Venmo**. Each row exposes:
 
-- **Threshold control** — a per-method dollar amount input. A withdrawal is auto-processed when it is at or below the method's threshold AND the user has only one payment method linked to their account. Withdrawals that do not meet both conditions are routed to the existing manual withdrawal processing queue. V1 launch thresholds:
+- **Threshold control** — a per-method dollar amount input. Automation conditions differ by tier:
+  - **GC Trusted:** auto-processed when at or below the threshold. The number of linked payment methods is not a condition.
+  - **Secondary:** auto-processed when at or below the threshold AND the user has only one payment method linked to their account.
+  Withdrawals that do not meet the applicable conditions are routed to the existing manual withdrawal processing queue. V1 launch thresholds:
 
   | Method  | Threshold |
   |---------|-----------|
