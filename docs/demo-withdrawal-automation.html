@@ -16,7 +16,6 @@
       flex-direction: column;
     }
 
-    /* ── Header ── */
     .header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -50,14 +49,12 @@
       font-weight: 700;
     }
 
-    /* ── Shell ── */
     .shell {
       display: flex;
       margin-top: 52px;
       min-height: calc(100vh - 52px);
     }
 
-    /* ── Sidebar ── */
     .sidebar {
       width: 200px;
       flex-shrink: 0;
@@ -104,7 +101,6 @@
     .nav-item.active svg { opacity: 1; }
     .nav-chevron { font-size: 0.6rem; opacity: 0.5; }
 
-    /* ── Main ── */
     .main {
       flex: 1;
       display: flex;
@@ -112,7 +108,6 @@
       overflow: hidden;
     }
 
-    /* ── Page header ── */
     .page-header {
       padding: 24px 28px 0;
       border-bottom: 1px solid #374151;
@@ -124,7 +119,6 @@
       margin-bottom: 16px;
     }
 
-    /* ── Tab bar ── */
     .tab-bar {
       display: flex;
       gap: 0;
@@ -146,30 +140,73 @@
       font-weight: 600;
     }
 
-    /* ── Content ── */
     .content {
       flex: 1;
       padding: 24px 28px;
       overflow-y: auto;
     }
 
-    /* ── Section header ── */
-    .section-intro {
+    /* Pause All banner */
+    .pause-all-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: #f59e0b18;
+      border: 1px solid #f59e0b55;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      color: #f59e0b;
+      font-weight: 600;
+    }
+    .pause-all-banner.visible { display: flex; }
+    .pause-all-banner svg { flex-shrink: 0; }
+
+    /* Settings tab top row */
+    .settings-toprow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       margin-bottom: 20px;
+      gap: 20px;
     }
     .section-intro p {
       font-size: 0.83rem;
       color: #9ca3af;
-      max-width: 640px;
+      max-width: 580px;
       line-height: 1.5;
     }
 
-    /* ── Method cards ── */
+    /* Pause All control */
+    .pause-all-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 10px 14px;
+      flex-shrink: 0;
+    }
+    .pause-all-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #d1d5db;
+      white-space: nowrap;
+    }
+    .pause-all-control.all-paused {
+      border-color: #f59e0b55;
+      background: #f59e0b0a;
+    }
+    .pause-all-control.all-paused .pause-all-label { color: #f59e0b; }
+
+    /* Method cards */
     .method-grid {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
     .method-card {
       background: #1f2937;
@@ -181,10 +218,7 @@
       align-items: center;
       gap: 16px;
     }
-    .method-card.paused {
-      border-color: #f59e0b44;
-      background: #1f2937;
-    }
+    .method-card.paused { border-color: #f59e0b44; }
     .method-name {
       font-size: 0.9rem;
       font-weight: 600;
@@ -217,28 +251,10 @@
       padding: 2px 6px;
     }
 
-    /* Threshold input */
-    .threshold-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .threshold-label {
-      font-size: 0.68rem;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-    }
-    .threshold-input-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .threshold-input-wrap span {
-      color: #6b7280;
-      font-size: 0.85rem;
-    }
+    .threshold-group { display: flex; flex-direction: column; gap: 4px; }
+    .threshold-label { font-size: 0.68rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    .threshold-input-wrap { display: flex; align-items: center; gap: 6px; }
+    .threshold-input-wrap span { color: #6b7280; font-size: 0.85rem; }
     .threshold-input {
       background: #111827;
       border: 1px solid #374151;
@@ -249,43 +265,14 @@
       width: 90px;
       outline: none;
     }
-    .threshold-input:focus {
-      border-color: #35A59E;
-    }
-    .threshold-input:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .manual-label {
-      font-size: 0.82rem;
-      color: #6b7280;
-      font-style: italic;
-    }
+    .threshold-input:focus { border-color: #35A59E; }
+    .threshold-input:disabled { opacity: 0.4; cursor: not-allowed; }
+    .manual-label { font-size: 0.82rem; color: #6b7280; font-style: italic; }
 
-    /* Pause toggle */
-    .toggle-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .toggle-label {
-      font-size: 0.68rem;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-    }
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .toggle {
-      position: relative;
-      width: 40px;
-      height: 22px;
-      flex-shrink: 0;
-    }
+    .toggle-group { display: flex; flex-direction: column; gap: 4px; }
+    .toggle-label { font-size: 0.68rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    .toggle-row { display: flex; align-items: center; gap: 10px; }
+    .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
     .toggle input { opacity: 0; width: 0; height: 0; }
     .toggle-track {
       position: absolute;
@@ -307,42 +294,16 @@
       transition: left 0.2s;
     }
     .toggle input:checked + .toggle-track::after { left: 21px; }
-    .toggle-state {
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
+    .toggle-state { font-size: 0.8rem; color: #9ca3af; }
     .toggle-state.on { color: #35A59E; font-weight: 600; }
     .toggle-state.paused { color: #f59e0b; font-weight: 600; }
 
-    /* Last modified */
-    .modified-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .modified-label {
-      font-size: 0.68rem;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-    }
-    .modified-val {
-      font-size: 0.78rem;
-      color: #9ca3af;
-    }
-    .modified-val strong {
-      color: #d1d5db;
-      font-weight: 600;
-    }
+    .modified-group { display: flex; flex-direction: column; gap: 4px; }
+    .modified-label { font-size: 0.68rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    .modified-val { font-size: 0.78rem; color: #9ca3af; }
+    .modified-val strong { color: #d1d5db; font-weight: 600; }
 
-    /* Save button */
-    .save-bar {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 4px;
-      margin-bottom: 32px;
-    }
+    .save-bar { display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 16px; }
     .btn-save {
       background: #35A59E;
       color: #fff;
@@ -355,23 +316,15 @@
     }
     .btn-save:hover { background: #2d8f89; }
 
-    /* ── Audit trail ── */
+    /* Audit trail */
     .audit-section-title {
       font-size: 0.85rem;
       font-weight: 700;
       color: #d1d5db;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    .audit-section-title svg { width: 15px; height: 15px; color: #6b7280; }
     .audit-table-wrap { overflow-x: auto; }
-    .audit-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
+    .audit-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
     .audit-table th {
       text-align: left;
       padding: 8px 12px;
@@ -402,8 +355,20 @@
     .badge-threshold { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f644; }
     .badge-paused    { background: #f59e0b22; color: #f59e0b;  border: 1px solid #f59e0b44; }
     .badge-resumed   { background: #22c55e22; color: #22c55e;  border: 1px solid #22c55e44; }
+    .badge-pause-all { background: #ef444422; color: #ef4444;  border: 1px solid #ef444444; }
+    .tier-chip {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #374151;
+      color: #9ca3af;
+    }
+    .tier-chip.gc { background: #35A59E22; color: #35A59E; border: 1px solid #35A59E44; }
+    .tier-chip.sec { background: #6366f122; color: #818cf8; border: 1px solid #6366f144; }
 
-    /* ── Confirmation modal ── */
+    /* Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -416,68 +381,38 @@
       pointer-events: none;
       transition: opacity 0.15s;
     }
-    .modal-overlay.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .modal-overlay.visible { opacity: 1; pointer-events: all; }
     .modal {
       background: #1f2937;
       border: 1px solid #374151;
       border-radius: 12px;
       padding: 24px;
-      width: 360px;
+      width: 380px;
       transform: scale(0.95);
       transition: transform 0.15s;
     }
     .modal-overlay.visible .modal { transform: scale(1); }
-    .modal-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #f9fafb;
-      margin-bottom: 8px;
-    }
-    .modal-body {
-      font-size: 0.82rem;
-      color: #9ca3af;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
+    .modal-title { font-size: 0.95rem; font-weight: 700; color: #f9fafb; margin-bottom: 8px; }
+    .modal-body { font-size: 0.82rem; color: #9ca3af; line-height: 1.5; margin-bottom: 20px; }
     .modal-body strong { color: #f9fafb; }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
     .btn-cancel {
-      background: #374151;
-      color: #d1d5db;
-      border: none;
-      border-radius: 7px;
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+      background: #374151; color: #d1d5db; border: none;
+      border-radius: 7px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
     }
     .btn-cancel:hover { background: #4b5563; }
     .btn-confirm {
-      background: #35A59E;
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+      background: #35A59E; color: #fff; border: none;
+      border-radius: 7px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
     }
     .btn-confirm:hover { background: #2d8f89; }
     .btn-confirm.danger { background: #ef4444; }
     .btn-confirm.danger:hover { background: #dc2626; }
 
-    /* ── Error toast ── */
+    /* Toast */
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 24px; right: 24px;
       background: #1f2937;
       border: 1px solid #ef444466;
       border-radius: 10px;
@@ -493,26 +428,12 @@
     }
     .toast.visible { transform: translateY(0); opacity: 1; }
     .toast-icon { color: #ef4444; flex-shrink: 0; margin-top: 1px; }
-    .toast-content {}
     .toast-title { font-size: 0.82rem; font-weight: 700; color: #f9fafb; margin-bottom: 2px; }
     .toast-msg { font-size: 0.77rem; color: #9ca3af; line-height: 1.4; }
-
-    /* ── Other tabs placeholder ── */
-    .placeholder-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 300px;
-      color: #4b5563;
-      font-size: 0.85rem;
-      gap: 8px;
-    }
   </style>
 </head>
 <body>
 
-<!-- Header -->
 <header class="header">
   <div class="header-logo">
     <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -529,8 +450,6 @@
 </header>
 
 <div class="shell">
-
-  <!-- Sidebar -->
   <nav class="sidebar">
     <div class="nav-section">
       <div class="nav-section-label cs">Customer Support <span class="nav-chevron">›</span></div>
@@ -550,74 +469,61 @@
         Withdrawal Automation
       </div>
       <div class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         Transaction Logs
       </div>
     </div>
-    <div class="nav-section">
-      <div class="nav-section-label ts">Trust &amp; Safety <span class="nav-chevron">›</span></div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label qp">QuickPicks <span class="nav-chevron">›</span></div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label mkt">Marketing <span class="nav-chevron">›</span></div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label gam">Gamification <span class="nav-chevron">›</span></div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label lea">Leagues <span class="nav-chevron">›</span></div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label sys">System Tools <span class="nav-chevron">›</span></div>
-    </div>
+    <div class="nav-section"><div class="nav-section-label ts">Trust &amp; Safety <span class="nav-chevron">›</span></div></div>
+    <div class="nav-section"><div class="nav-section-label qp">QuickPicks <span class="nav-chevron">›</span></div></div>
+    <div class="nav-section"><div class="nav-section-label mkt">Marketing <span class="nav-chevron">›</span></div></div>
+    <div class="nav-section"><div class="nav-section-label gam">Gamification <span class="nav-chevron">›</span></div></div>
+    <div class="nav-section"><div class="nav-section-label lea">Leagues <span class="nav-chevron">›</span></div></div>
+    <div class="nav-section"><div class="nav-section-label sys">System Tools <span class="nav-chevron">›</span></div></div>
   </nav>
 
-  <!-- Main -->
   <main class="main">
-
-    <!-- Page header + tabs -->
     <div class="page-header">
       <div class="page-title">Withdrawal Automation</div>
       <div class="tab-bar">
-        <div class="tab active" onclick="switchTab('automation', this)">Automation Settings</div>
+        <div class="tab active" onclick="switchTab('gc', this)">GC Trusted Automation Settings</div>
+        <div class="tab" onclick="switchTab('secondary', this)">Secondary Automation Settings</div>
         <div class="tab" onclick="switchTab('audit', this)">Audit Trail</div>
       </div>
     </div>
 
-    <!-- Content -->
     <div class="content">
 
-      <!-- ── Automation Settings tab ── -->
-      <div id="tab-automation">
-        <div class="section-intro">
-          <p>Configure per-method withdrawal automation thresholds and pause automation as needed. A withdrawal is auto-processed when the amount is at or below the method threshold <em>and</em> the user has exactly one payment method linked to their account. Changes require confirmation and take effect immediately for new requests.</p>
+      <!-- GC Trusted tab -->
+      <div id="tab-gc">
+        <div id="banner-gc" class="pause-all-banner">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          All GC Trusted automation is paused — new withdrawal requests are being routed to the manual queue.
         </div>
-
-        <div class="method-grid" id="method-grid">
-
+        <div class="settings-toprow">
+          <div class="section-intro">
+            <p>GC Trusted automation settings apply higher thresholds for trusted users. A withdrawal is auto-processed when it is at or below the method threshold <em>and</em> the user has exactly one linked payment method. Changes require confirmation and take effect immediately.</p>
+          </div>
+          <div class="pause-all-control" id="pause-all-ctrl-gc">
+            <div class="pause-all-label">Pause All</div>
+            <label class="toggle">
+              <input type="checkbox" id="pause-all-gc" onchange="onPauseAll('gc', this)" />
+              <div class="toggle-track"></div>
+            </label>
+          </div>
+        </div>
+        <div class="method-grid" id="grid-gc">
           <!-- Aeropay -->
-          <div class="method-card" id="card-aeropay">
-            <div class="method-name">
-              <div class="method-icon">AP</div>
-              Aeropay
-            </div>
+          <div class="method-card" id="gc-card-aeropay">
+            <div class="method-name"><div class="method-icon">AP</div>Aeropay</div>
             <div class="threshold-group">
               <div class="threshold-label">Auto-process threshold</div>
-              <div class="threshold-input-wrap">
-                <span>$</span>
-                <input class="threshold-input" type="number" id="threshold-aeropay" value="1000" min="0" step="50" />
-              </div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="gc-threshold-aeropay" value="5000" min="0" step="250" /></div>
             </div>
             <div class="toggle-group">
               <div class="toggle-label">Automation</div>
               <div class="toggle-row">
-                <label class="toggle">
-                  <input type="checkbox" id="toggle-aeropay" checked onchange="onToggleChange('aeropay', this)" />
-                  <div class="toggle-track"></div>
-                </label>
-                <span class="toggle-state on" id="state-aeropay">Active</span>
+                <label class="toggle"><input type="checkbox" id="gc-toggle-aeropay" checked onchange="onToggleChange('gc','aeropay',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="gc-state-aeropay">Active</span>
               </div>
             </div>
             <div class="modified-group">
@@ -625,28 +531,18 @@
               <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
             </div>
           </div>
-
           <!-- Card -->
-          <div class="method-card" id="card-card">
-            <div class="method-name">
-              <div class="method-icon">💳</div>
-              Card
-            </div>
+          <div class="method-card" id="gc-card-card">
+            <div class="method-name"><div class="method-icon">💳</div>Card</div>
             <div class="threshold-group">
               <div class="threshold-label">Auto-process threshold</div>
-              <div class="threshold-input-wrap">
-                <span>$</span>
-                <input class="threshold-input" type="number" id="threshold-card" value="250" min="0" step="50" />
-              </div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="gc-threshold-card" value="1000" min="0" step="250" /></div>
             </div>
             <div class="toggle-group">
               <div class="toggle-label">Automation</div>
               <div class="toggle-row">
-                <label class="toggle">
-                  <input type="checkbox" id="toggle-card" checked onchange="onToggleChange('card', this)" />
-                  <div class="toggle-track"></div>
-                </label>
-                <span class="toggle-state on" id="state-card">Active</span>
+                <label class="toggle"><input type="checkbox" id="gc-toggle-card" checked onchange="onToggleChange('gc','card',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="gc-state-card">Active</span>
               </div>
             </div>
             <div class="modified-group">
@@ -654,28 +550,18 @@
               <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
             </div>
           </div>
-
           <!-- PayPal -->
-          <div class="method-card" id="card-paypal">
-            <div class="method-name">
-              <div class="method-icon">PP</div>
-              PayPal
-            </div>
+          <div class="method-card" id="gc-card-paypal">
+            <div class="method-name"><div class="method-icon">PP</div>PayPal</div>
             <div class="threshold-group">
               <div class="threshold-label">Auto-process threshold</div>
-              <div class="threshold-input-wrap">
-                <span>$</span>
-                <input class="threshold-input" type="number" id="threshold-paypal" value="500" min="0" step="50" />
-              </div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="gc-threshold-paypal" value="2500" min="0" step="250" /></div>
             </div>
             <div class="toggle-group">
               <div class="toggle-label">Automation</div>
               <div class="toggle-row">
-                <label class="toggle">
-                  <input type="checkbox" id="toggle-paypal" checked onchange="onToggleChange('paypal', this)" />
-                  <div class="toggle-track"></div>
-                </label>
-                <span class="toggle-state on" id="state-paypal">Active</span>
+                <label class="toggle"><input type="checkbox" id="gc-toggle-paypal" checked onchange="onToggleChange('gc','paypal',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="gc-state-paypal">Active</span>
               </div>
             </div>
             <div class="modified-group">
@@ -683,28 +569,18 @@
               <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
             </div>
           </div>
-
           <!-- Venmo -->
-          <div class="method-card" id="card-venmo">
-            <div class="method-name">
-              <div class="method-icon">V</div>
-              Venmo
-            </div>
+          <div class="method-card" id="gc-card-venmo">
+            <div class="method-name"><div class="method-icon">V</div>Venmo</div>
             <div class="threshold-group">
               <div class="threshold-label">Auto-process threshold</div>
-              <div class="threshold-input-wrap">
-                <span>$</span>
-                <input class="threshold-input" type="number" id="threshold-venmo" value="500" min="0" step="50" />
-              </div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="gc-threshold-venmo" value="2500" min="0" step="250" /></div>
             </div>
             <div class="toggle-group">
               <div class="toggle-label">Automation</div>
               <div class="toggle-row">
-                <label class="toggle">
-                  <input type="checkbox" id="toggle-venmo" checked onchange="onToggleChange('venmo', this)" />
-                  <div class="toggle-track"></div>
-                </label>
-                <span class="toggle-state on" id="state-venmo">Active</span>
+                <label class="toggle"><input type="checkbox" id="gc-toggle-venmo" checked onchange="onToggleChange('gc','venmo',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="gc-state-venmo">Active</span>
               </div>
             </div>
             <div class="modified-group">
@@ -712,13 +588,9 @@
               <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
             </div>
           </div>
-
-          <!-- Skrill — manual only -->
-          <div class="method-card" id="card-skrill" style="opacity:0.6;">
-            <div class="method-name">
-              <div class="method-icon">SK</div>
-              Skrill
-            </div>
+          <!-- Skrill -->
+          <div class="method-card" id="gc-card-skrill" style="opacity:0.6;">
+            <div class="method-name"><div class="method-icon">SK</div>Skrill</div>
             <div class="threshold-group">
               <div class="threshold-label">Auto-process threshold</div>
               <div class="manual-label">Manual queue only</div>
@@ -726,11 +598,8 @@
             <div class="toggle-group">
               <div class="toggle-label">Automation</div>
               <div class="toggle-row">
-                <label class="toggle">
-                  <input type="checkbox" id="toggle-skrill" disabled />
-                  <div class="toggle-track"></div>
-                </label>
-                <span class="toggle-state" id="state-skrill" style="color:#6b7280;">Disabled</span>
+                <label class="toggle"><input type="checkbox" disabled /><div class="toggle-track"></div></label>
+                <span class="toggle-state" style="color:#6b7280;">Disabled</span>
               </div>
             </div>
             <div class="modified-group">
@@ -738,18 +607,132 @@
               <div class="modified-val" style="color:#6b7280;">—</div>
             </div>
           </div>
-
         </div>
-
-        <div class="save-bar">
-          <button class="btn-save" onclick="onSaveChanges()">Save Changes</button>
-        </div>
+        <div class="save-bar"><button class="btn-save" onclick="onSaveChanges('gc')">Save Changes</button></div>
       </div>
 
-      <!-- ── Audit Trail tab ── -->
+      <!-- Secondary tab -->
+      <div id="tab-secondary" style="display:none;">
+        <div id="banner-secondary" class="pause-all-banner">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          All Secondary automation is paused — new withdrawal requests are being routed to the manual queue.
+        </div>
+        <div class="settings-toprow">
+          <div class="section-intro">
+            <p>Secondary automation settings apply to standard users. A withdrawal is auto-processed when it is at or below the method threshold <em>and</em> the user has exactly one linked payment method. Changes require confirmation and take effect immediately.</p>
+          </div>
+          <div class="pause-all-control" id="pause-all-ctrl-secondary">
+            <div class="pause-all-label">Pause All</div>
+            <label class="toggle">
+              <input type="checkbox" id="pause-all-secondary" onchange="onPauseAll('secondary', this)" />
+              <div class="toggle-track"></div>
+            </label>
+          </div>
+        </div>
+        <div class="method-grid" id="grid-secondary">
+          <!-- Aeropay -->
+          <div class="method-card" id="secondary-card-aeropay">
+            <div class="method-name"><div class="method-icon">AP</div>Aeropay</div>
+            <div class="threshold-group">
+              <div class="threshold-label">Auto-process threshold</div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="secondary-threshold-aeropay" value="1000" min="0" step="50" /></div>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-label">Automation</div>
+              <div class="toggle-row">
+                <label class="toggle"><input type="checkbox" id="secondary-toggle-aeropay" checked onchange="onToggleChange('secondary','aeropay',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="secondary-state-aeropay">Active</span>
+              </div>
+            </div>
+            <div class="modified-group">
+              <div class="modified-label">Last modified</div>
+              <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
+            </div>
+          </div>
+          <!-- Card -->
+          <div class="method-card" id="secondary-card-card">
+            <div class="method-name"><div class="method-icon">💳</div>Card</div>
+            <div class="threshold-group">
+              <div class="threshold-label">Auto-process threshold</div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="secondary-threshold-card" value="250" min="0" step="50" /></div>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-label">Automation</div>
+              <div class="toggle-row">
+                <label class="toggle"><input type="checkbox" id="secondary-toggle-card" checked onchange="onToggleChange('secondary','card',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="secondary-state-card">Active</span>
+              </div>
+            </div>
+            <div class="modified-group">
+              <div class="modified-label">Last modified</div>
+              <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
+            </div>
+          </div>
+          <!-- PayPal -->
+          <div class="method-card" id="secondary-card-paypal">
+            <div class="method-name"><div class="method-icon">PP</div>PayPal</div>
+            <div class="threshold-group">
+              <div class="threshold-label">Auto-process threshold</div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="secondary-threshold-paypal" value="500" min="0" step="50" /></div>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-label">Automation</div>
+              <div class="toggle-row">
+                <label class="toggle"><input type="checkbox" id="secondary-toggle-paypal" checked onchange="onToggleChange('secondary','paypal',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="secondary-state-paypal">Active</span>
+              </div>
+            </div>
+            <div class="modified-group">
+              <div class="modified-label">Last modified</div>
+              <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
+            </div>
+          </div>
+          <!-- Venmo -->
+          <div class="method-card" id="secondary-card-venmo">
+            <div class="method-name"><div class="method-icon">V</div>Venmo</div>
+            <div class="threshold-group">
+              <div class="threshold-label">Auto-process threshold</div>
+              <div class="threshold-input-wrap"><span>$</span><input class="threshold-input" type="number" id="secondary-threshold-venmo" value="500" min="0" step="50" /></div>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-label">Automation</div>
+              <div class="toggle-row">
+                <label class="toggle"><input type="checkbox" id="secondary-toggle-venmo" checked onchange="onToggleChange('secondary','venmo',this)" /><div class="toggle-track"></div></label>
+                <span class="toggle-state on" id="secondary-state-venmo">Active</span>
+              </div>
+            </div>
+            <div class="modified-group">
+              <div class="modified-label">Last modified</div>
+              <div class="modified-val"><strong>pfinnell</strong> · Jun 9, 2026 10:14 AM</div>
+            </div>
+          </div>
+          <!-- Skrill -->
+          <div class="method-card" id="secondary-card-skrill" style="opacity:0.6;">
+            <div class="method-name"><div class="method-icon">SK</div>Skrill</div>
+            <div class="threshold-group">
+              <div class="threshold-label">Auto-process threshold</div>
+              <div class="manual-label">Manual queue only</div>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-label">Automation</div>
+              <div class="toggle-row">
+                <label class="toggle"><input type="checkbox" disabled /><div class="toggle-track"></div></label>
+                <span class="toggle-state" style="color:#6b7280;">Disabled</span>
+              </div>
+            </div>
+            <div class="modified-group">
+              <div class="modified-label">Last modified</div>
+              <div class="modified-val" style="color:#6b7280;">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="save-bar"><button class="btn-save" onclick="onSaveChanges('secondary')">Save Changes</button></div>
+      </div>
+
+      <!-- Audit Trail tab -->
       <div id="tab-audit" style="display:none;">
         <div class="section-intro" style="margin-bottom:16px;">
-          <p>All automation setting changes made in the last 12 months. Read-only.</p>
+          <p>All automation setting changes across both tiers made in the last 12 months. Read-only.</p>
         </div>
         <div class="audit-table-wrap">
           <table class="audit-table">
@@ -757,9 +740,10 @@
               <tr>
                 <th>Timestamp (UTC)</th>
                 <th>Admin</th>
+                <th>Tier</th>
                 <th>Method</th>
                 <th>Action</th>
-                <th>Previous value</th>
+                <th>Previous</th>
                 <th>New value</th>
               </tr>
             </thead>
@@ -767,6 +751,16 @@
               <tr>
                 <td>Jun 9, 2026 10:14 AM</td>
                 <td>pfinnell</td>
+                <td><span class="tier-chip gc">GC Trusted</span></td>
+                <td>All methods</td>
+                <td><span class="audit-action-badge badge-threshold">Threshold</span></td>
+                <td>$500 (global)</td>
+                <td>AP $5,000 · Card $1,000 · PP $2,500 · Venmo $2,500</td>
+              </tr>
+              <tr>
+                <td>Jun 9, 2026 10:14 AM</td>
+                <td>pfinnell</td>
+                <td><span class="tier-chip sec">Secondary</span></td>
                 <td>All methods</td>
                 <td><span class="audit-action-badge badge-threshold">Threshold</span></td>
                 <td>$500 (global)</td>
@@ -781,7 +775,7 @@
   </main>
 </div>
 
-<!-- Confirmation modal -->
+<!-- Modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title" id="modal-title">Confirm change</div>
@@ -793,34 +787,39 @@
   </div>
 </div>
 
-<!-- Error toast -->
+<!-- Toast -->
 <div class="toast" id="toast">
   <div class="toast-icon">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
   </div>
   <div class="toast-content">
-    <div class="toast-title" id="toast-title">Processing error detected</div>
+    <div class="toast-title">Processing error detected</div>
     <div class="toast-msg" id="toast-msg"></div>
   </div>
 </div>
 
 <script>
-  // ── Tab switching ──
+  const METHODS = ['aeropay','card','paypal','venmo'];
+  const TIERS = ['gc','secondary'];
+  let pendingAction = null;
+
+  const savedThresholds = {
+    gc:        { aeropay: 5000, card: 1000, paypal: 2500, venmo: 2500 },
+    secondary: { aeropay: 1000, card: 250,  paypal: 500,  venmo: 500  }
+  };
+
   function switchTab(name, el) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('tab-automation').style.display = name === 'automation' ? '' : 'none';
-    document.getElementById('tab-audit').style.display = name === 'audit' ? '' : 'none';
+    ['gc','secondary','audit'].forEach(id => {
+      document.getElementById('tab-' + id).style.display = (id === name) ? '' : 'none';
+    });
   }
-
-  // ── Modal state ──
-  let pendingAction = null;
 
   function showModal(title, body, isDanger, onConfirm) {
     document.getElementById('modal-title').textContent = title;
     document.getElementById('modal-body').innerHTML = body;
-    const btn = document.getElementById('modal-confirm-btn');
-    btn.className = isDanger ? 'btn-confirm danger' : 'btn-confirm';
+    document.getElementById('modal-confirm-btn').className = isDanger ? 'btn-confirm danger' : 'btn-confirm';
     pendingAction = onConfirm;
     document.getElementById('modal-overlay').classList.add('visible');
   }
@@ -831,40 +830,40 @@
     pendingAction = null;
   }
 
-  // ── Toggle change ──
-  function onToggleChange(method, checkbox) {
+  function tierLabel(tier) { return tier === 'gc' ? 'GC Trusted' : 'Secondary'; }
+  function methodLabel(m) { return { aeropay:'Aeropay', card:'Card', paypal:'PayPal', venmo:'Venmo', skrill:'Skrill' }[m]; }
+
+  function onToggleChange(tier, method, checkbox) {
     const isPausing = !checkbox.checked;
     const label = methodLabel(method);
+    const tLabel = tierLabel(tier);
 
     if (isPausing) {
-      // Revert optimistic UI until confirmed
       checkbox.checked = true;
       showModal(
-        `Pause automation for ${label}?`,
-        `New <strong>${label}</strong> withdrawal requests will be routed to the manual queue immediately. Withdrawals already in <em>Processing</em> are unaffected.`,
+        `Pause ${label} automation (${tLabel})?`,
+        `New <strong>${label}</strong> withdrawal requests on the <strong>${tLabel}</strong> tier will be routed to the manual queue immediately. Withdrawals already in <em>Processing</em> are unaffected.`,
         true,
-        () => applyToggle(method, false)
+        () => applyToggle(tier, method, false)
       );
     } else {
       checkbox.checked = false;
       showModal(
-        `Resume automation for ${label}?`,
-        `Automation will resume for <strong>${label}</strong> withdrawals that meet the threshold and single-payment-method conditions.`,
+        `Resume ${label} automation (${tLabel})?`,
+        `Automation will resume for <strong>${label}</strong> on the <strong>${tLabel}</strong> tier for withdrawals that meet the threshold and single-payment-method conditions.`,
         false,
-        () => applyToggle(method, true)
+        () => applyToggle(tier, method, true)
       );
     }
   }
 
-  function applyToggle(method, active) {
-    const checkbox = document.getElementById('toggle-' + method);
-    const stateEl = document.getElementById('state-' + method);
-    const card = document.getElementById('card-' + method);
+  function applyToggle(tier, method, active) {
+    const checkbox = document.getElementById(`${tier}-toggle-${method}`);
+    const stateEl  = document.getElementById(`${tier}-state-${method}`);
+    const card = document.getElementById(`${tier}-card-${method}`);
     const nameEl = card.querySelector('.method-name');
 
     checkbox.checked = active;
-
-    // Remove old paused badge if any
     const oldBadge = nameEl.querySelector('.paused-badge');
     if (oldBadge) oldBadge.remove();
 
@@ -882,82 +881,113 @@
       nameEl.appendChild(badge);
     }
 
-    addAuditRow(method, active ? 'resumed' : 'paused', active ? 'Paused' : 'Active', active ? 'Active' : 'Paused');
-    updateModified(method);
+    addAuditRow(tier, method, active ? 'resumed' : 'paused', active ? 'Paused' : 'Active', active ? 'Active' : 'Paused');
+    updateModified(tier, method);
   }
 
-  // ── Save changes (threshold) ──
-  const methods = ['aeropay', 'card', 'paypal', 'venmo'];
-  let savedThresholds = { aeropay: 1000, card: 250, paypal: 500, venmo: 500 };
+  function onPauseAll(tier, checkbox) {
+    const isPausing = checkbox.checked;
+    const tLabel = tierLabel(tier);
 
-  function onSaveChanges() {
-    const changes = [];
-    methods.forEach(m => {
-      const input = document.getElementById('threshold-' + m);
-      const newVal = parseInt(input.value, 10);
-      if (newVal !== savedThresholds[m]) {
-        changes.push({ method: m, prev: savedThresholds[m], next: newVal });
-      }
+    // Revert until confirmed
+    checkbox.checked = !isPausing;
+
+    if (isPausing) {
+      showModal(
+        `Pause ALL ${tLabel} automation?`,
+        `This will immediately halt automated processing of <strong>all new withdrawal requests</strong> on the <strong>${tLabel}</strong> tier. Withdrawals already in <em>Processing</em> are unaffected. This is a broad failsafe — use with care.`,
+        true,
+        () => applyPauseAll(tier, true)
+      );
+    } else {
+      showModal(
+        `Resume ALL ${tLabel} automation?`,
+        `Automation will resume on the <strong>${tLabel}</strong> tier for all methods according to their individual settings.`,
+        false,
+        () => applyPauseAll(tier, false)
+      );
+    }
+  }
+
+  function applyPauseAll(tier, pausing) {
+    const checkbox = document.getElementById(`pause-all-${tier}`);
+    const ctrl = document.getElementById(`pause-all-ctrl-${tier}`);
+    const banner = document.getElementById(`banner-${tier}`);
+    checkbox.checked = pausing;
+    ctrl.classList.toggle('all-paused', pausing);
+    banner.classList.toggle('visible', pausing);
+
+    // Disable/enable all method inputs
+    METHODS.forEach(m => {
+      const ti = document.getElementById(`${tier}-threshold-${m}`);
+      const tg = document.getElementById(`${tier}-toggle-${m}`);
+      if (ti) ti.disabled = pausing;
+      if (tg) tg.disabled = pausing;
     });
 
-    if (changes.length === 0) return;
+    addAuditRow(tier, 'All methods', pausing ? 'pause-all' : 'resumed', pausing ? 'Active' : 'All Paused', pausing ? 'All Paused' : 'Active');
+    updateModifiedAll(tier);
+  }
 
-    const lines = changes.map(c =>
-      `<strong>${methodLabel(c.method)}</strong>: $${c.prev} → $${c.next}`
-    ).join('<br>');
+  function onSaveChanges(tier) {
+    const changes = [];
+    METHODS.forEach(m => {
+      const input = document.getElementById(`${tier}-threshold-${m}`);
+      const newVal = parseInt(input.value, 10);
+      if (newVal !== savedThresholds[tier][m]) {
+        changes.push({ method: m, prev: savedThresholds[tier][m], next: newVal });
+      }
+    });
+    if (!changes.length) return;
 
+    const tLabel = tierLabel(tier);
+    const lines = changes.map(c => `<strong>${methodLabel(c.method)}</strong>: $${c.prev} → $${c.next}`).join('<br>');
     showModal(
-      'Confirm threshold changes',
-      `The following thresholds will be updated and take effect immediately for new withdrawal requests:<br><br>${lines}`,
+      `Confirm threshold changes (${tLabel})`,
+      `The following thresholds will be updated on the <strong>${tLabel}</strong> tier and take effect immediately for new requests:<br><br>${lines}`,
       false,
       () => {
         changes.forEach(c => {
-          savedThresholds[c.method] = c.next;
-          addAuditRow(c.method, 'threshold', `$${c.prev}`, `$${c.next}`);
-          updateModified(c.method);
+          savedThresholds[tier][c.method] = c.next;
+          addAuditRow(tier, c.method, 'threshold', `$${c.prev}`, `$${c.next}`);
+          updateModified(tier, c.method);
         });
       }
     );
   }
 
-  // ── Audit trail helpers ──
-  function addAuditRow(method, action, prev, next) {
+  function addAuditRow(tier, method, action, prev, next) {
     const tbody = document.getElementById('audit-tbody');
     const tr = document.createElement('tr');
     const now = new Date();
-    const ts = now.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
-    const badgeClass = action === 'threshold' ? 'badge-threshold' : action === 'paused' ? 'badge-paused' : 'badge-resumed';
-    const actionLabel = action === 'threshold' ? 'Threshold' : action === 'paused' ? 'Paused' : 'Resumed';
-    tr.innerHTML = `
-      <td>${ts}</td>
-      <td>pfinnell</td>
-      <td>${methodLabel(method)}</td>
-      <td><span class="audit-action-badge ${badgeClass}">${actionLabel}</span></td>
-      <td>${prev}</td>
-      <td>${next}</td>
-    `;
+    const ts = now.toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
+    const badgeClass = action === 'threshold' ? 'badge-threshold' : action === 'pause-all' ? 'badge-pause-all' : action === 'paused' ? 'badge-paused' : 'badge-resumed';
+    const actionLabel = action === 'threshold' ? 'Threshold' : action === 'pause-all' ? 'Pause All' : action === 'paused' ? 'Paused' : 'Resumed';
+    const tierChip = tier === 'gc' ? '<span class="tier-chip gc">GC Trusted</span>' : '<span class="tier-chip sec">Secondary</span>';
+    const mLabel = method === 'All methods' ? 'All methods' : methodLabel(method);
+    tr.innerHTML = `<td>${ts}</td><td>pfinnell</td><td>${tierChip}</td><td>${mLabel}</td><td><span class="audit-action-badge ${badgeClass}">${actionLabel}</span></td><td>${prev}</td><td>${next}</td>`;
     tbody.insertBefore(tr, tbody.firstChild);
   }
 
-  function updateModified(method) {
-    const card = document.getElementById('card-' + method);
+  function updateModified(tier, method) {
+    const card = document.getElementById(`${tier}-card-${method}`);
     const el = card.querySelector('.modified-val');
     const now = new Date();
-    const ts = now.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const ts = now.toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
     el.innerHTML = `<strong>pfinnell</strong> · ${ts}`;
   }
 
-  function methodLabel(m) {
-    return { aeropay: 'Aeropay', card: 'Card', paypal: 'PayPal', venmo: 'Venmo', skrill: 'Skrill' }[m];
+  function updateModifiedAll(tier) {
+    METHODS.forEach(m => updateModified(tier, m));
   }
 
-  // ── Demo: show error toast after 8 seconds to demo Slack/UI error notification ──
+  // Demo error toast after 10s
   setTimeout(() => {
-    document.getElementById('toast-msg').textContent = 'A PayPal withdrawal request failed to route after a threshold change. Slack notification sent to #payments-alerts.';
+    document.getElementById('toast-msg').textContent = 'A PayPal withdrawal failed to route on the Secondary tier after a threshold change. Slack notification sent to #payments-alerts.';
     const toast = document.getElementById('toast');
     toast.classList.add('visible');
     setTimeout(() => toast.classList.remove('visible'), 6000);
-  }, 8000);
+  }, 10000);
 </script>
 </body>
 </html>

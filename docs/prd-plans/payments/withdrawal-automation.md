@@ -32,8 +32,9 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 
 ## User Stories
 
-- As a **Super Admin**, I want to set a per-method dollar threshold for withdrawal automation, so that I can tune auto-processing limits to match the risk profile of each payment method without requiring an engineering deploy.
-- As a **Super Admin**, I want to pause automation for a specific payment method, so that I can immediately stop new withdrawals from being auto-processed during a risk event or compliance hold without affecting withdrawals already in progress.
+- As a **Super Admin**, I want to set a per-method dollar threshold for withdrawal automation across GC Trusted and Secondary tiers, so that I can tune auto-processing limits for different user segments without requiring an engineering deploy.
+- As a **Super Admin**, I want to pause automation for a specific payment method on either settings tier, so that I can immediately stop new withdrawals from being auto-processed during a risk event or compliance hold without affecting withdrawals already in progress.
+- As a **Super Admin**, I want a single "Pause All" toggle per settings tier so that I can halt all automation in that tier instantly as a failsafe during an incident.
 - As a **Trust & Safety team member**, I want to view the current automation settings for each payment method in read-only mode, so that I have visibility into the automation state without the ability to inadvertently change it.
 - As a **Super Admin**, I want to see who last modified automation settings and when, so that I have an audit trail for compliance and incident review.
 
@@ -41,24 +42,26 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 
 ### Functional Requirements
 
-1. The system SHALL add a **Withdrawal Automation** tab to the Payments admin page.
-2. The tab SHALL display one row per supported payment method: **Aeropay, Card, PayPal, Venmo, Skrill**.
+1. The system SHALL add a **Withdrawal Automation** page to the Payments admin section containing three tabs: **GC Trusted Automation Settings**, **Secondary Automation Settings**, and **Audit Trail**.
+2. Each settings tab SHALL display one row per supported payment method: **Aeropay, Card, PayPal, Venmo, Skrill**.
 3. Each row SHALL display the payment method name, its threshold (or "Manual only" for Skrill), its pause state, and the last-modified timestamp and admin username.
 4. For methods with automation enabled (Aeropay, Card, PayPal, Venmo), each row SHALL provide an editable dollar amount field for the automation threshold.
 5. The system SHALL auto-process a withdrawal when ALL of the following conditions are met:
-   a. The withdrawal amount is at or below the method's configured threshold.
+   a. The withdrawal amount is at or below the method's configured threshold for the applicable tier.
    b. The user has exactly one payment method linked to their account.
-   c. Automation for that method is not paused.
+   c. Automation for that method is not paused on that tier.
+   d. The "Pause All" toggle for that tier is not active.
 6. Withdrawals that do not meet all conditions in requirement 5 SHALL be routed to the existing manual withdrawal processing queue.
-7. Each method row SHALL provide a pause/resume toggle that immediately halts automated processing of **new** withdrawal requests for that method.
-8. Pausing a method SHALL NOT affect withdrawals already in a `Processing` state — those continue to completion uninterrupted.
-9. A paused method SHALL display a visible status indicator (e.g., "Paused") so the state is unambiguous at a glance.
-10. The Skrill row SHALL be displayed as read-only with automation permanently disabled ("Manual only") — no threshold input or pause toggle.
-11. All changes to automation settings (threshold edits, pause/resume) SHALL be written to an audit log capturing: the admin username, the action taken, the previous value, the new value, and a UTC timestamp.
-12. Changes SHALL take effect immediately for new withdrawal requests upon save — no deploy required.
-13. Before any change is applied (threshold edit or pause/resume toggle), the system SHALL present a confirmation dialog summarizing the pending change. The change is only committed upon explicit confirmation.
-14. The audit trail SHALL be viewable within the admin UI as a dedicated panel or table on the Withdrawal Automation tab, accessible to both Super Admin and Trust & Safety roles. The UI SHALL display all changes made within the last 12 months; changes older than 12 months are not required to be shown in the UI.
-15. If a withdrawal processing error occurs after an automation setting change, the system SHALL surface an error notification to Super Admin users both within the admin UI and via a Slack notification, identifying the affected method and the nature of the failure.
+7. Each method row SHALL provide a pause/resume toggle that immediately halts automated processing of **new** withdrawal requests for that method on that tier.
+8. Each settings tab SHALL display a **Pause All** toggle in the top-right corner that immediately halts all automation on that tier, regardless of individual method settings. Pausing all SHALL require the same confirmation dialog as individual method changes.
+9. Pausing a method or triggering Pause All SHALL NOT affect withdrawals already in a `Processing` state — those continue to completion uninterrupted.
+10. A paused method SHALL display a visible status indicator (e.g., "Paused") so the state is unambiguous at a glance. When Pause All is active, the tab header SHALL display a prominent banner indicating all automation is halted on that tier.
+11. The Skrill row SHALL be displayed as read-only with automation permanently disabled ("Manual only") — no threshold input or pause toggle.
+12. All changes to automation settings (threshold edits, pause/resume, Pause All) SHALL be written to an audit log capturing: the admin username, the action taken, the tier affected, the previous value, the new value, and a UTC timestamp.
+13. Changes SHALL take effect immediately for new withdrawal requests upon save — no deploy required.
+14. Before any change is applied (threshold edit, pause/resume toggle, or Pause All), the system SHALL present a confirmation dialog summarizing the pending change. The change is only committed upon explicit confirmation.
+15. The audit trail SHALL be viewable within the admin UI as a dedicated **Audit Trail** tab on the Withdrawal Automation page, accessible to both Super Admin and Trust & Safety roles. The UI SHALL display all changes made within the last 12 months; changes older than 12 months are not required to be shown in the UI.
+16. If a withdrawal processing error occurs after an automation setting change, the system SHALL surface an error notification to Super Admin users both within the admin UI and via a Slack notification, identifying the affected tier, method, and the nature of the failure.
 
 ### Access Control Requirements
 
@@ -84,16 +87,17 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 
 ### In Scope
 
-- Withdrawal Automation tab on the Payments admin page
-- Per-method threshold control for Aeropay, Card, PayPal, Venmo
-- Pause/resume toggle per method
-- Skrill displayed as manual-only (no automation)
-- Confirmation dialog required before any change is applied
+- Withdrawal Automation page on the Payments admin section with three tabs: GC Trusted Automation Settings, Secondary Automation Settings, Audit Trail
+- Per-method threshold control for Aeropay, Card, PayPal, Venmo on each tier
+- Pause/resume toggle per method on each tier
+- Pause All toggle per tier as a failsafe — halts all automation on that tier immediately
+- Skrill displayed as manual-only (no automation) on both tiers
+- Confirmation dialog required before any change is applied (including Pause All)
 - Last-modified audit trail per row
-- In-UI audit trail panel visible to Super Admin and Trust & Safety
-- Error notifications to Super Admin when withdrawal processing errors occur after a setting change
+- In-UI Audit Trail tab visible to Super Admin and Trust & Safety showing last 12 months of changes
+- Error notifications to Super Admin (in-UI + Slack) when withdrawal processing errors occur after a setting change, identifying tier and method
 - Role-based access: Super Admin (edit), Trust & Safety (read-only)
-- Audit log of all changes
+- Audit log of all changes including tier context
 
 ### Out of Scope
 
@@ -103,6 +107,18 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 - Changing the second automation condition (single linked payment method) — v1 carries it forward as-is
 
 ## V1 Launch Thresholds
+
+### GC Trusted Automation Settings
+
+| Method  | Threshold | Automation |
+|---------|-----------|------------|
+| Card    | $1,000    | Enabled    |
+| PayPal  | $2,500    | Enabled    |
+| Venmo   | $2,500    | Enabled    |
+| Aeropay | $5,000    | Enabled    |
+| Skrill  | —         | Manual only |
+
+### Secondary Automation Settings
 
 | Method  | Threshold | Automation |
 |---------|-----------|------------|
@@ -114,7 +130,10 @@ Withdrawal automation at Splash Sports runs on a single global rule — any with
 
 ## Acceptance Criteria
 
-- Given a Super Admin is on the Payments admin page, when they navigate to the Withdrawal Automation tab, then they see a row for each of the five payment methods with the current threshold, pause state, and last-modified info.
+- Given a Super Admin is on the Payments admin page, when they navigate to the Withdrawal Automation page, then they see three tabs: GC Trusted Automation Settings, Secondary Automation Settings, and Audit Trail.
+- Given a Super Admin is on either settings tab, then they see a row for each of the five payment methods with the current threshold, pause state, and last-modified info, plus a Pause All toggle in the top-right corner.
+- Given a Super Admin activates the Pause All toggle on a settings tab, when confirmed, then all automation on that tier is immediately halted and a prominent banner is displayed indicating all automation is paused for that tier.
+- Given a Super Admin resumes from Pause All, when confirmed, then individual method automation resumes according to each method's current pause state and threshold.
 - Given a Super Admin edits a method's threshold or toggles a pause state, when they attempt to save, then a confirmation dialog is shown summarizing the change; the change is only applied upon explicit confirmation and cancelled if dismissed.
 - Given a Super Admin confirms a threshold change, when the change is applied, then new withdrawals for that method immediately use the updated threshold, and the audit log records the change with the admin's username, previous value, new value, and UTC timestamp.
 - Given a Super Admin toggles the pause switch for a method, when the toggle is saved, then no new withdrawal requests for that method are auto-processed, and the row displays a "Paused" status indicator.
