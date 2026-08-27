@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splash Admin — User Payment Methods Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f8f9fa;
+      color: #212529;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: #fff;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #35A59E;
+    }
+    .header-logo svg { width: 28px; height: 28px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .avatar-chip {
+      width: 32px; height: 32px;
+      background: #35A59E;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── Shell ── */
+    .shell { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #dee2e6;
+      flex-shrink: 0;
+      padding: 16px 0;
+      overflow-y: auto;
+    }
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 16px 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: 0.875rem;
+      color: #495057;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .nav-item:hover { background: #f1f3f5; }
+    .nav-item.active { background: #e6f7f6; color: #35A59E; font-weight: 600; }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active svg { opacity: 1; }
+
+    /* ── Main content ── */
+    .main { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #35A59E;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    /* ── User header ── */
+    .user-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .user-header-left { display: flex; align-items: center; gap: 14px; }
+    .user-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #35A59E, #2a7e78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .user-name { font-size: 1.2rem; font-weight: 700; color: #212529; }
+    .user-email { font-size: 0.8rem; color: #868e96; margin-top: 2px; }
+    .user-header-actions { display: flex; gap: 8px; }
+    .action-btn {
+      border: 1px solid #dee2e6;
+      background: #fff;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #495057;
+    }
+    .action-btn:hover { background: #f1f3f5; }
+
+    /* ── Cards row ── */
+    .cards-row { display: flex; gap: 16px; }
+    .card { background: #fff; border: 1px solid #dee2e6; border-radius: 10px; padding: 16px 20px; }
+    .balance-card { flex: 0 0 260px; }
+    .fraud-card { flex: 1; }
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .balance-amount { font-size: 1.6rem; font-weight: 700; color: #212529; }
+    .balance-row { display: flex; justify-content: space-between; font-size: 0.78rem; color: #868e96; margin-top: 8px; }
+    .badge-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ebfbee;
+      color: #40c057;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 2px 10px;
+    }
+
+    /* ── Tabs ── */
+    .tabs-bar { background: #fff; border: 1px solid #dee2e6; border-radius: 10px; overflow: hidden; }
+    .tabs-list {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #dee2e6;
+      overflow-x: auto;
+      padding: 0 8px;
+    }
+    .tab-trigger {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: #868e96;
+      border: none;
+      background: none;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.1s;
+    }
+    .tab-trigger:hover { color: #495057; }
+    .tab-trigger.active { color: #35A59E; border-bottom-color: #35A59E; font-weight: 600; }
+    .tab-trigger svg { width: 14px; height: 14px; }
+    .tab-content { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .tab-new {
+      background: #35A59E;
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 1px 5px;
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
+    /* ── Panel toolbar ── */
+    .panel-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .method-summary { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .summary-stat { display: flex; align-items: baseline; gap: 6px; }
+    .summary-stat .num { font-size: 1.3rem; font-weight: 700; color: #212529; }
+    .summary-stat .label { font-size: 0.78rem; color: #868e96; }
+    .sync-note { font-size: 0.72rem; color: #adb5bd; display: flex; align-items: center; gap: 4px; }
+    .sync-note svg { width: 12px; height: 12px; }
+
+    .toolbar-right { display: flex; align-items: center; gap: 14px; }
+    .show-removed-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #495057;
+      cursor: pointer;
+      user-select: none;
+    }
+    .show-removed-toggle input { accent-color: #35A59E; width: 14px; height: 14px; cursor: pointer; }
+
+    .scope-note {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      background: #f8f9fa;
+      border: 1px solid #f1f3f5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      color: #868e96;
+      line-height: 1.5;
+    }
+    .scope-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; color: #adb5bd; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; border: 1px solid #dee2e6; border-radius: 8px; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.83rem; }
+    thead th {
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #868e96;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 12px;
+      border-bottom: 1px solid #dee2e6;
+      background: #f8f9fa;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f1f3f5; transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8f9fa; }
+    tbody tr.row-removed { opacity: 0.6; }
+    tbody td { padding: 11px 12px; vertical-align: middle; color: #212529; }
+
+    .method-cell { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .method-icon {
+      width: 30px; height: 30px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .mi-aeropay { background: #2f9e77; }
+    .mi-card    { background: #4263eb; }
+    .mi-paypal  { background: #0070ba; }
+    .mi-venmo   { background: #3d95ce; }
+    .mi-skrill  { background: #862165; }
+    .method-name { font-weight: 600; color: #212529; }
+    .method-masked { font-size: 0.75rem; color: #868e96; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+    /* ── Status badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      border-radius: 999px;
+      padding: 0 10px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .badge-active   { background: #ebfbee; color: #40c057; }
+    .badge-removed  { background: #f1f3f5; color: #868e96; }
+
+    .dash { color: #adb5bd; }
+    .col-muted { color: #868e96; white-space: nowrap; }
+
+    .row-actions { display: flex; gap: 6px; align-items: center; }
+    .btn-view {
+      background: transparent;
+      border: 1px solid #35A59E;
+      color: #35A59E;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+    .btn-view:hover { background: #35A59E; color: #fff; }
+    .btn-remove {
+      background: transparent;
+      border: 1px solid #fa5252;
+      color: #fa5252;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+    .btn-remove:hover { background: #fa5252; color: #fff; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: #868e96;
+      font-size: 0.875rem;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .empty-state.show { display: flex; }
+    .empty-state svg { width: 32px; height: 32px; color: #ced4da; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(33,37,41,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: 440px;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .modal-title-row { display: flex; align-items: center; gap: 10px; }
+    .modal-title { font-size: 1.02rem; font-weight: 700; color: #212529; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #adb5bd;
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { color: #495057; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: #f8f9fa;
+      border: 1px solid #f1f3f5;
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .detail-grid .full { grid-column: 1 / -1; }
+    .detail-item .dl { font-size: 0.66rem; font-weight: 700; color: #868e96; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .detail-item .dv { font-size: 0.85rem; color: #212529; font-weight: 600; }
+
+    .mask-note {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 0.74rem;
+      color: #868e96;
+      line-height: 1.5;
+    }
+    .mask-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+
+    .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .btn-close-modal {
+      background: #35A59E;
+      border: 1px solid #35A59E;
+      color: #fff;
+      border-radius: 7px;
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-close-modal:hover { background: #2d8f89; }
+
+    /* ── Confirm modal ── */
+    .confirm-modal { width: 400px; gap: 14px; }
+    .confirm-message { font-size: 0.86rem; color: #495057; line-height: 1.55; }
+    .confirm-message strong { color: #212529; }
+    .confirm-footer { display: flex; gap: 8px; justify-content: flex-end; }
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid #ced4da;
+      color: #495057;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cancel:hover { background: #f1f3f5; }
+    .btn-confirm-apply {
+      background: #35A59E;
+      border: 1px solid #35A59E;
+      color: #fff;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-confirm-apply:hover { background: #2d8f89; }
+    .btn-confirm-remove {
+      background: #fa5252;
+      border: 1px solid #fa5252;
+      color: #fff;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-confirm-remove:hover { background: #e03131; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: #ebfbee; border: 1px solid #40c057; color: #2b8a3e; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#35A59E"/>
+      <path d="M8 16 C8 10 24 10 24 16 C24 22 8 22 8 16Z" fill="white" opacity="0.9"/>
+    </svg>
+    Splash Admin
+  </div>
+  <div class="header-right">
+    <span style="font-size:0.8rem;color:#868e96;">pfinnell</span>
+    <div class="avatar-chip">PF</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="nav-section-label">Customer Support</div>
+    <div class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Users
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Transactions
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Contests
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Withdrawal Requests
+    </div>
+    <div class="nav-section-label">Trust &amp; Safety</div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      Fraud Flags
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Restrictions
+    </div>
+    <div class="nav-section-label">Finance</div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Bulk Transactions
+    </div>
+    <div class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Automated Payouts
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <button class="back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      Users
+    </button>
+
+    <!-- User header -->
+    <div class="user-header">
+      <div class="user-header-left">
+        <div class="user-avatar">JD</div>
+        <div>
+          <div class="user-name">john_doe92</div>
+          <div class="user-email">john.doe@example.com · <span style="font-family:monospace;font-size:0.75rem;">a3f8c1d2-4e5b-4f6a-89ab-cdef01234567</span></div>
+        </div>
+      </div>
+      <div class="user-header-actions">
+        <button class="action-btn">Suspend User</button>
+        <button class="action-btn">Reset Password</button>
+        <button class="action-btn">Merge Account</button>
+      </div>
+    </div>
+
+    <!-- Balance + Fraud row -->
+    <div class="cards-row">
+      <div class="card balance-card">
+        <div class="card-label">Available Balance</div>
+        <div class="balance-amount">$124.50</div>
+        <div class="balance-row"><span>Withdrawable</span><span style="color:#212529;font-weight:600;">$80.00</span></div>
+        <div class="balance-row"><span>Bonus</span><span style="color:#212529;font-weight:600;">$44.50</span></div>
+      </div>
+      <div class="card fraud-card">
+        <div class="card-label">Fraud &amp; Restrictions</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="badge-ok">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            No fraud flag
+          </span>
+          <span class="badge-ok">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            No restrictions
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+      <div class="tabs-list">
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Details
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Fraud Flag / Restrictions
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Transactions
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Adjust Balance
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          Bonuses
+        </button>
+        <button class="tab-trigger active">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Payment Methods
+          <span class="tab-new">NEW</span>
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Contests
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Quick Picks
+        </button>
+        <button class="tab-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Verification
+        </button>
+      </div>
+
+      <!-- Payment Methods tab content -->
+      <div class="tab-content">
+
+        <div class="panel-toolbar">
+          <div class="method-summary">
+            <div class="summary-stat"><span class="num" id="active-count">4</span><span class="label">active methods</span></div>
+            <div class="summary-stat"><span class="num" id="total-count">5</span><span class="label">total linked (incl. removed)</span></div>
+            <div class="sync-note">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Synced 2 minutes ago
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <label class="show-removed-toggle">
+              <input type="checkbox" id="show-removed" onchange="renderTable()" />
+              Show removed methods
+            </label>
+          </div>
+        </div>
+
+        <div class="scope-note">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Removing a method here controls whether it can be used at all. This is independent of Withdrawal Automation's per-method thresholds and pause controls, which govern auto-processing of eligible withdrawals separately.
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date Added</th>
+                <th>Last Used</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="methods-tbody"></tbody>
+          </table>
+
+          <div class="empty-state" id="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            No payment methods linked to this account.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) closeDetail()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="method-icon" id="modal-icon">AP</div>
+        <div>
+          <div class="modal-title" id="modal-title">Aeropay</div>
+          <div class="method-masked" id="modal-masked">Bank ••••4821</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeDetail()">&times;</button>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-item"><div class="dl">Status</div><div class="dv" id="modal-status">Active</div></div>
+      <div class="detail-item"><div class="dl">Date Added</div><div class="dv" id="modal-added">Jan 14, 2026</div></div>
+      <div class="detail-item"><div class="dl">Last Used</div><div class="dv" id="modal-lastused">Aug 25, 2026</div></div>
+      <div class="detail-item full"><div class="dl">Linked Transactions</div><div class="dv" id="modal-txns">18 deposits · 4 withdrawals</div></div>
+    </div>
+
+    <div class="mask-note">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Only the last 4 characters of this method's identifier are ever surfaced in Admin. Full account details are never transmitted here.
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-remove" id="modal-remove-btn" onclick="closeDetail(); requestRemove(currentModalKey)">Remove method</button>
+      <button class="btn-close-modal" onclick="closeDetail()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirm-overlay" onclick="if(event.target===this) closeConfirm()">
+  <div class="modal confirm-modal">
+    <div class="modal-header">
+      <div class="modal-title" id="confirm-title">Confirm change</div>
+      <button class="modal-close" onclick="closeConfirm()">&times;</button>
+    </div>
+    <div class="confirm-message" id="confirm-message">Are you sure?</div>
+    <div class="confirm-footer">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button id="confirm-action-btn" class="btn-confirm-apply" onclick="applyPendingAction()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast success" id="toast"></div>
+
+<script>
+  const METHODS = [
+    {
+      key: 'aeropay', icon: 'AP', iconClass: 'mi-aeropay', name: 'Aeropay', masked: 'Bank ••••4821',
+      status: 'active', added: 'Jan 14, 2026', lastUsed: 'Aug 25, 2026',
+      txns: '18 deposits · 4 withdrawals'
+    },
+    {
+      key: 'card', icon: 'VC', iconClass: 'mi-card', name: 'Card (Visa)', masked: '•••• 4242',
+      status: 'active', added: 'Mar 2, 2026', lastUsed: 'Aug 20, 2026',
+      txns: '9 deposits · 1 withdrawal'
+    },
+    {
+      key: 'venmo', icon: 'VN', iconClass: 'mi-venmo', name: 'Venmo', masked: '@j••••92',
+      status: 'active', added: 'Aug 24, 2026', lastUsed: '— never used —',
+      txns: '0 deposits · 0 withdrawals'
+    },
+    {
+      key: 'skrill', icon: 'SK', iconClass: 'mi-skrill', name: 'Skrill', masked: 's••••@skrill.com',
+      status: 'active', added: 'Jun 9, 2026', lastUsed: 'Jul 30, 2026',
+      txns: '3 deposits · 0 withdrawals'
+    },
+    {
+      key: 'paypal', icon: 'PP', iconClass: 'mi-paypal', name: 'PayPal', masked: 'j••••@example.com',
+      status: 'removed', added: 'Nov 3, 2025', lastUsed: 'Feb 11, 2026',
+      txns: '6 deposits · 2 withdrawals'
+    }
+  ];
+
+  let currentModalKey = null;
+  let pendingAction = null; // { type: 'remove', key }
+
+  function findMethod(key) { return METHODS.find(m => m.key === key); }
+
+  function renderTable() {
+    const showRemoved = document.getElementById('show-removed').checked;
+    const tbody = document.getElementById('methods-tbody');
+    tbody.innerHTML = '';
+
+    const visible = METHODS.filter(m => m.status === 'active' || showRemoved);
+
+    visible.forEach(m => {
+      const tr = document.createElement('tr');
+      if (m.status === 'removed') tr.classList.add('row-removed');
+
+      const actionsCell = m.status === 'active'
+        ? `<div class="row-actions">
+             <button class="btn-view" onclick="openDetail('${m.key}')">View</button>
+             <button class="btn-remove" onclick="requestRemove('${m.key}')">Remove</button>
+           </div>`
+        : `<div class="row-actions"><button class="btn-view" onclick="openDetail('${m.key}')">View</button></div>`;
+
+      tr.innerHTML = `
+        <td>
+          <div class="method-cell" onclick="openDetail('${m.key}')">
+            <div class="method-icon ${m.iconClass}">${m.icon}</div>
+            <div>
+              <div class="method-name">${m.name}</div>
+              <div class="method-masked">${m.masked}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge ${m.status === 'active' ? 'badge-active' : 'badge-removed'}">${m.status === 'active' ? 'Active' : 'Removed'}</span></td>
+        <td class="col-muted">${m.added}</td>
+        <td class="col-muted">${m.lastUsed}</td>
+        <td>${actionsCell}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('empty-state').classList.toggle('show', visible.length === 0);
+
+    const activeCount = METHODS.filter(m => m.status === 'active').length;
+    document.getElementById('active-count').textContent = activeCount;
+    document.getElementById('total-count').textContent = METHODS.length;
+  }
+
+  function openDetail(key) {
+    const m = findMethod(key);
+    if (!m) return;
+    currentModalKey = key;
+
+    const iconEl = document.getElementById('modal-icon');
+    iconEl.textContent = m.icon;
+    iconEl.className = 'method-icon ' + m.iconClass;
+
+    document.getElementById('modal-title').textContent = m.name;
+    document.getElementById('modal-masked').textContent = m.masked;
+    document.getElementById('modal-status').textContent = m.status === 'active' ? 'Active' : 'Removed';
+    document.getElementById('modal-added').textContent = m.added;
+    document.getElementById('modal-lastused').textContent = m.lastUsed;
+    document.getElementById('modal-txns').textContent = m.txns;
+
+    document.getElementById('modal-remove-btn').style.display = m.status === 'active' ? 'inline-block' : 'none';
+
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeDetail() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  function requestRemove(key) {
+    const m = findMethod(key);
+    if (!m) return;
+
+    pendingAction = { type: 'remove', key };
+
+    document.getElementById('confirm-title').textContent = 'Remove payment method';
+    document.getElementById('confirm-message').innerHTML =
+      `Remove <strong>${m.name}</strong> (${m.masked}) from this account? It will no longer be usable for deposits or withdrawals. This does not affect existing transaction history, and the method will only reappear if "Show removed methods" is enabled.`;
+    const btn = document.getElementById('confirm-action-btn');
+    btn.textContent = 'Remove method';
+    btn.className = 'btn-confirm-remove';
+
+    document.getElementById('confirm-overlay').classList.add('open');
+  }
+
+  function closeConfirm() {
+    pendingAction = null;
+    document.getElementById('confirm-overlay').classList.remove('open');
+  }
+
+  function applyPendingAction() {
+    if (!pendingAction) return;
+    const m = findMethod(pendingAction.key);
+
+    if (pendingAction.type === 'remove') {
+      m.status = 'removed';
+      showToast(`${m.name} removed from account.`);
+    }
+
+    pendingAction = null;
+    document.getElementById('confirm-overlay').classList.remove('open');
+    renderTable();
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeDetail(); closeConfirm(); }
+  });
+
+  renderTable();
+</script>
+
+</body>
+</html>
