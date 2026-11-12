@@ -1,13 +1,13 @@
 ---
 type: prd-one-pager
-title: "Admin User Transaction History — Deposit Refunds"
+title: "Admin User Transaction History — Deposit Refunds & Withdrawal Review"
 slug: admin-user-transaction-history
 template_version: 1.0.0
 domain: admin
 product_line: internal-tool
 status: 1pager-draft
 created: 2026-05-29
-updated: 2026-05-29
+updated: 2026-11-12
 author: pfinnell
 status_history:
   - status: 1pager-draft
@@ -23,7 +23,7 @@ tags:
   - customer-support
 ---
 
-# Admin User Transaction History — Deposit Refunds
+# Admin User Transaction History — Deposit Refunds & Withdrawal Review
 
 > **Status:** `1pager-draft` · **Domain:** admin · **Product line:** internal-tool · **Author:** pfinnell
 
@@ -31,7 +31,7 @@ tags:
 T&S and CS agents process deposit refunds through the Adjust Balance section of Admin, which requires navigating away from the user's transaction history, manually copying and pasting transaction IDs, and cross-referencing two screens to confirm the outcome. This is friction on a routine, high-frequency support action.
 
 ## Problem
-There is no Refund action on the transaction tab. Operators must leave the transaction history, use Adjust Balance with a manual transaction ID lookup, and return to verify the result. There is no in-context visibility into which deposits have already been refunded.
+There is no Refund action on the transaction tab. Operators must leave the transaction history, use Adjust Balance with a manual transaction ID lookup, and return to verify the result. There is no in-context visibility into which deposits have already been refunded. Likewise, a `Processing` withdrawal can only be approved or rejected from the separate Withdrawal Requests page, so operators reviewing a user's history have to leave it to act.
 
 ## Who
 Customer Support operators who handle deposit disputes and Finance operators who oversee refund accuracy. Deposit refunds are a recurring support workflow.
@@ -42,6 +42,8 @@ Customer Support operators who handle deposit disputes and Finance operators who
 - Include a partial refund checkbox in the dialog; when checked, an amount input appears for the operator to enter a custom amount.
 - Reflect the updated transaction status (Refunded) immediately after a successful refund.
 - Show a clear error message if the refund fails.
+- Add a Review dropdown (Approve / Reject) to `Processing` withdrawal rows, for Super Admin and Trust & Safety (Internal and External) only.
+- Use the same confirmation dialog and reason lists as the Withdrawal Requests page, and the same backend action, so a decision looks the same on both pages.
 
 ## Success signals
 Engineering escalations for deposit refund processing drop to zero. Operators can process a deposit refund in under 2 minutes without leaving Admin.
@@ -52,7 +54,7 @@ Engineering escalations for deposit refund processing drop to zero. Operators ca
 | Clear visibility into refunded deposits | None | Refunded status visible on transaction row |
 
 ## Risks & unknowns
-The full downstream call chain for a refund (wallet, ledger, payment processor) needs an engineering spike before scoping. Eligibility rules (which deposits can be refunded) and role-based access control must be confirmed before implementation.
+The full downstream call chain for a refund (wallet, ledger, payment processor) needs an engineering spike before scoping. Eligibility rules (which deposits can be refunded) and role-based access control must be confirmed before implementation. Withdrawal review must handle a withdrawal that was already actioned on the other page or by automation.
 
 ## Out of scope
-Refunds on non-deposit transaction types. Manual balance adjustments. Transaction display improvements (see Admin User Transaction Visibility PRD).
+Refunds on non-deposit transaction types. Changes to the Withdrawal Requests page or its reasons. Bulk withdrawal actions. Manual balance adjustments. Transaction display improvements (see Admin User Transaction Visibility PRD).

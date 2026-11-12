@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Splash Admin — Deposit Refunds Demo</title>
+  <title>Splash Admin — Deposit Refunds &amp; Withdrawal Review Demo</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -525,6 +525,89 @@
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: #14532d; border: 1px solid #16a34a; color: #86efac; }
     .toast.error   { background: #450a0a; border: 1px solid #b91c1c; color: #fca5a5; }
+
+    /* ── Withdrawal review ── */
+    .sb-processing { background: #fef3c7; color: #b45309; }
+    .sb-approved   { background: #dcfce7; color: #15803d; }
+    .sb-rejected   { background: #fee2e2; color: #b91c1c; }
+    .reason-text   { font-size: 0.74rem; color: #fca5a5; }
+    .action-done   { font-size: 0.7rem; color: #6b7280; font-style: italic; white-space: nowrap; }
+
+    .btn-review {
+      background: transparent;
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+      border-radius: 5px;
+      padding: 3px 8px 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-review:hover, .btn-review.open { background: #f59e0b; color: #111827; }
+    .btn-review:disabled { border-color: #374151; color: #4b5563; background: transparent; cursor: not-allowed; }
+    .btn-review .caret { font-size: 0.55rem; }
+    .no-access { display: none; }
+    body.wd-no-access .btn-review { display: none; }
+    body.wd-no-access .no-access { display: inline; }
+    .role-switch { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #6b7280; }
+    .role-switch select {
+      background: #111827; border: 1px solid #4b5563; color: #d1d5db;
+      border-radius: 6px; padding: 4px 8px; font-size: 0.74rem; font-family: inherit;
+    }
+
+    .action-menu {
+      display: none;
+      position: fixed;
+      z-index: 150;
+      min-width: 150px;
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      padding: 4px;
+    }
+    .action-menu.open { display: block; }
+    .action-menu button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+    }
+    .action-menu .menu-approve { color: #4ade80; }
+    .action-menu .menu-reject  { color: #f87171; }
+    .action-menu button:hover { background: #374151; }
+
+    .modal-select, .modal-textarea {
+      background: #111827;
+      border: 1px solid #4b5563;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      color: #f9fafb;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+    }
+    .modal-select:focus, .modal-textarea:focus { border-color: #35A59E; }
+    .modal-textarea { resize: vertical; min-height: 64px; }
+    .modal-note { font-size: 0.76rem; color: #9ca3af; line-height: 1.45; }
+    .btn-confirm.approve { background: #16a34a; border-color: #16a34a; }
+    .btn-confirm.approve:hover { background: #15803d; }
+    .btn-confirm.reject { background: #dc2626; border-color: #dc2626; }
+    .btn-confirm.reject:hover { background: #b91c1c; }
+    .btn-confirm.approve:disabled, .btn-confirm.reject:disabled { background: #374151; border-color: #374151; color: #6b7280; }
   </style>
 </head>
 <body>
@@ -539,6 +622,15 @@
     Splash Admin
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <label class="role-switch" title="Demo only: preview what each Admin role sees">
+      Viewing as
+      <select id="role-select" onchange="applyRole()">
+        <option value="super-admin">Super Admin</option>
+        <option value="ts-internal">Trust &amp; Safety (Internal)</option>
+        <option value="ts-external">Trust &amp; Safety (External)</option>
+        <option value="cs">Customer Support</option>
+      </select>
+    </label>
     <span style="font-size:0.78rem;color:#9ca3af;">pfinnell</span>
     <div class="avatar-chip">PF</div>
   </div>
@@ -667,7 +759,35 @@
             </thead>
             <tbody>
 
-              <!-- Withdrawal -->
+              <!-- Withdrawal — processing, reviewable -->
+              <tr class="type-withdrawal" id="row-wd-1">
+                <td><span class="mono">5b2e9c71-3f0a-4d8e-a1c6-9e47d2b80f13</span></td>
+                <td><span class="type-badge tb-withdrawal"><span class="dot dot-withdrawal"></span>Withdrawal</span></td>
+                <td style="color:#9ca3af;">debit</td>
+                <td>AEROPAY</td>
+                <td style="color:#9ca3af;">fiat</td>
+                <td style="font-weight:600;">$1,250.00</td>
+                <td id="status-wd-1"><span class="status-badge sb-processing">Processing</span></td>
+                <td id="reason-wd-1"><span class="dash">—</span></td>
+                <td style="color:#9ca3af;white-space:nowrap;">May 28th, 2026 16:20</td>
+                <td id="action-wd-1"><button class="btn-review" id="btn-wd-1" onclick="openActionMenu(event, 'wd-1')">Review <span class="caret">▼</span></button><span class="dash no-access">—</span></td>
+              </tr>
+
+              <!-- Withdrawal — processing, reviewable -->
+              <tr class="type-withdrawal" id="row-wd-2">
+                <td><span class="mono">e80d4a26-7c19-4b3f-9d52-61af3c8e07b4</span></td>
+                <td><span class="type-badge tb-withdrawal"><span class="dot dot-withdrawal"></span>Withdrawal</span></td>
+                <td style="color:#9ca3af;">debit</td>
+                <td>PAYPAL</td>
+                <td style="color:#9ca3af;">fiat</td>
+                <td style="font-weight:600;">$320.00</td>
+                <td id="status-wd-2"><span class="status-badge sb-processing">Processing</span></td>
+                <td id="reason-wd-2"><span class="dash">—</span></td>
+                <td style="color:#9ca3af;white-space:nowrap;">May 27th, 2026 09:58</td>
+                <td id="action-wd-2"><button class="btn-review" id="btn-wd-2" onclick="openActionMenu(event, 'wd-2')">Review <span class="caret">▼</span></button><span class="dash no-access">—</span></td>
+              </tr>
+
+              <!-- Withdrawal — completed -->
               <tr class="type-withdrawal">
                 <td><span class="mono">a4636b7d-c6e0-42fe-9f78-2741e8d51882</span></td>
                 <td><span class="type-badge tb-withdrawal"><span class="dot dot-withdrawal"></span>Withdrawal</span></td>
@@ -865,6 +985,45 @@
   </div>
 </div>
 
+<!-- Withdrawal action menu -->
+<div class="action-menu" id="action-menu" role="menu">
+  <button class="menu-approve" role="menuitem" onclick="openWithdrawalModal('approve')">✓&nbsp; Approve</button>
+  <button class="menu-reject" role="menuitem" onclick="openWithdrawalModal('reject')">✕&nbsp; Reject</button>
+</div>
+
+<!-- Withdrawal Approve / Reject Modal -->
+<div class="modal-overlay" id="wd-modal-overlay" onclick="handleWdOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="wd-modal-title">Are you sure you want to approve this request?</div>
+      <button class="modal-close" onclick="closeWdModal()">✕</button>
+    </div>
+
+    <div class="modal-meta">
+      <div class="modal-meta-row">
+        <span class="label">Transaction</span>
+        <span class="value mono" id="wd-modal-txn-id" style="font-size:0.68rem;"></span>
+      </div>
+      <div class="modal-meta-row">
+        <span class="label">Payment method</span>
+        <span class="value" id="wd-modal-method"></span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-label">Reason <span style="color:#f87171;">*</span></div>
+      <select class="modal-select" id="wd-reason" onchange="validateWdReason()"></select>
+      <textarea class="modal-textarea" id="wd-other-note" style="display:none;" placeholder="Describe the reason" oninput="validateWdReason()"></textarea>
+      <div class="modal-note" id="wd-modal-note"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeWdModal()">Cancel</button>
+      <button class="btn-confirm approve" id="wd-btn-confirm" onclick="submitWithdrawalAction()">Approve</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -991,6 +1150,154 @@
     setTimeout(() => {
       toast.classList.remove('show');
     }, 4000);
+  }
+
+  /* ── Withdrawal review ── */
+  const WITHDRAWALS = {
+    'wd-1': { id: '5b2e9c71-3f0a-4d8e-a1c6-9e47d2b80f13', amount: '$1,250.00', method: 'AEROPAY' },
+    'wd-2': { id: 'e80d4a26-7c19-4b3f-9d52-61af3c8e07b4', amount: '$320.00',   method: 'PAYPAL' },
+  };
+  let menuWdId = null;
+  let activeWdId = null;
+  let activeWdAction = null;
+
+  // Withdrawal Approve / Reject is limited to Super Admin and Trust & Safety (Internal + External)
+  const WD_REVIEW_ROLES = ['super-admin', 'ts-internal', 'ts-external'];
+  function applyRole() {
+    const role = document.getElementById('role-select').value;
+    document.body.classList.toggle('wd-no-access', !WD_REVIEW_ROLES.includes(role));
+    closeActionMenu();
+  }
+
+  function openActionMenu(e, wdId) {
+    e.stopPropagation();
+    const menu = document.getElementById('action-menu');
+    const btn = document.getElementById('btn-' + wdId);
+    if (menu.classList.contains('open') && menuWdId === wdId) { closeActionMenu(); return; }
+    closeActionMenu();
+    menuWdId = wdId;
+    btn.classList.add('open');
+    const r = btn.getBoundingClientRect();
+    menu.classList.add('open');
+    const left = Math.min(r.left, window.innerWidth - menu.offsetWidth - 8);
+    menu.style.left = Math.max(8, left) + 'px';
+    menu.style.top = (r.bottom + 4) + 'px';
+  }
+
+  function closeActionMenu() {
+    document.getElementById('action-menu').classList.remove('open');
+    document.querySelectorAll('.btn-review.open').forEach(b => b.classList.remove('open'));
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#action-menu')) closeActionMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeActionMenu(); closeWdModal(); closeModal(); }
+  });
+  window.addEventListener('resize', closeActionMenu);
+  document.querySelector('.main').addEventListener('scroll', closeActionMenu);
+  document.querySelector('.table-wrap').addEventListener('scroll', closeActionMenu);
+
+  // Same reason lists as the Withdrawal Requests page (admin /withdrawal-requests)
+  const APPROVE_REASONS = [
+    'Withdrew winnings',
+    'Withdrew funds/winnings after contest entry',
+    'Withdrew funds + winnings',
+    'Withdrew deposit, no contest entry',
+    'Withdrew duplicate deposit',
+    'Withdrew funds after canceling Contest entry',
+    'Withdrew funds after Contest/QP entry was canceled',
+    'Withdrew commish rewards',
+    'Withdrew Marketplace Sales',
+    'Other',
+  ];
+  const REJECT_REASONS = [
+    'Canceled - Refunding deposit',
+    'Canceled - Suspicious activity / Needs Review',
+    'Canceled - Failed withdrawal',
+    'Canceled - Pushing to ACH',
+    'User requesting to cancel withdrawal',
+    'Other',
+  ];
+  const USER_NAME = 'JOHN DOE';
+
+  function openWithdrawalModal(action) {
+    activeWdId = menuWdId;
+    activeWdAction = action;
+    closeActionMenu();
+    const wd = WITHDRAWALS[activeWdId];
+    const isApprove = action === 'approve';
+
+    document.getElementById('wd-modal-title').textContent =
+      'Are you sure you want to ' + action + ' this request for ' + USER_NAME + ' (' + wd.amount + ')?';
+    document.getElementById('wd-modal-txn-id').textContent = wd.id;
+    document.getElementById('wd-modal-method').textContent = wd.method;
+
+    const select = document.getElementById('wd-reason');
+    select.innerHTML = '<option value="">Select a reason</option>' +
+      (isApprove ? APPROVE_REASONS : REJECT_REASONS).map(r => '<option>' + r + '</option>').join('');
+    select.value = '';
+    const note = document.getElementById('wd-other-note');
+    note.value = '';
+    note.style.display = 'none';
+    document.getElementById('wd-modal-note').textContent = isApprove
+      ? 'Approving releases this withdrawal to the payment processor for payout.'
+      : 'Rejecting cancels the withdrawal and returns the full amount to the user’s balance.';
+
+    const confirmBtn = document.getElementById('wd-btn-confirm');
+    confirmBtn.className = 'btn-confirm ' + action;
+    confirmBtn.textContent = isApprove ? 'Approve' : 'Reject';
+    confirmBtn.disabled = true;
+
+    document.getElementById('wd-modal-overlay').classList.add('open');
+  }
+
+  function validateWdReason() {
+    const reason = document.getElementById('wd-reason').value;
+    const note = document.getElementById('wd-other-note');
+    note.style.display = reason === 'Other' ? 'block' : 'none';
+    const ok = reason && (reason !== 'Other' || note.value.trim().length > 0);
+    document.getElementById('wd-btn-confirm').disabled = !ok;
+  }
+
+  function closeWdModal() {
+    document.getElementById('wd-modal-overlay').classList.remove('open');
+    activeWdId = null;
+  }
+
+  function handleWdOverlayClick(e) {
+    if (e.target === document.getElementById('wd-modal-overlay')) closeWdModal();
+  }
+
+  function submitWithdrawalAction() {
+    const confirmBtn = document.getElementById('wd-btn-confirm');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Processing…';
+    const wdId = activeWdId;
+    const action = activeWdAction;
+    const wd = WITHDRAWALS[wdId];
+    let reason = document.getElementById('wd-reason').value;
+    if (reason === 'Other') reason = 'Other: ' + document.getElementById('wd-other-note').value.trim();
+
+    setTimeout(() => {
+      const status = document.getElementById('status-' + wdId);
+      const actionCell = document.getElementById('action-' + wdId);
+      const reasonCell = document.getElementById('reason-' + wdId);
+      reasonCell.innerHTML = '<span class="reason-text"></span>';
+      reasonCell.firstChild.textContent = reason;
+      if (action === 'approve') {
+        status.innerHTML = '<span class="status-badge sb-approved">Approved</span>';
+        reasonCell.firstChild.style.color = '#86efac';
+        actionCell.innerHTML = '<span class="action-done">Approved by pfinnell</span>';
+        showToast('success', 'Withdrawal of ' + wd.amount + ' approved.');
+      } else {
+        status.innerHTML = '<span class="status-badge sb-rejected">Rejected</span>';
+        actionCell.innerHTML = '<span class="action-done">Rejected by pfinnell</span>';
+        showToast('success', 'Withdrawal of ' + wd.amount + ' rejected.');
+      }
+      closeWdModal();
+    }, 1000);
   }
 
   function toggleLegend(toggle) {
